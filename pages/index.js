@@ -8,9 +8,40 @@ import BasicSelect from "../components/Select/BasicSelect";
 import ImageIcon from "@mui/icons-material/Image";
 import CategoryTab from "../components/CategoryTab";
 import DatePick from "../components/DatePick";
-
+import dayjs from 'dayjs';
+import axios from "../utils/axios";
 export default function Home() {
   //const theme = useTheme();
+  const [name, setName] = React.useState("")
+  const [category, setCategory] = React.useState("食")
+  const [reason, setReason] = React.useState("便當")
+  const [account, setAccount] = React.useState("")
+  const [time, setTime]  = React.useState(dayjs())
+  const [price, setPrice] = React.useState(0)
+
+  const handleSubmit = async(e) => {
+    const data = {
+      name,
+      category,
+      reason,
+      account,
+      dateTime: time.format(),
+      price
+    }
+    console.log(data)
+    try {
+
+      const response = await axios.post(`https://localhost:7283/api/expense`, data)
+
+      if(res.request?.status == 200) {
+        
+      }
+
+    } catch(err) {
+      console.log(err)
+    }
+    console.log(data)
+  }
 
   return (
     <>
@@ -50,12 +81,12 @@ export default function Home() {
             <Button variant="contained" color="error">
               取消
             </Button>
-            <Button variant="contained">新增</Button>
+            <Button variant="contained" onClick={handleSubmit}>新增</Button>
           </Box>
         </Grid>
 
         <Grid size={12} item>
-          <CategoryTab />
+          <CategoryTab category={category} setCategory={setCategory} reason={reason} setReason={setReason}/>
         </Grid>
 
         <Grid size={12} item>
@@ -64,9 +95,26 @@ export default function Home() {
             label="名稱"
             variant="outlined"
             fullWidth
+            value={name}
+            onChange={(e) => {
+              e.preventDefault
+              setName(e.target.value)
+            }}
           />
         </Grid>
-
+            <Grid size={12} item>
+          <TextField
+            id="outlined-basic"
+            label="費用"
+            variant="outlined"
+            fullWidth
+            value={price}
+            onChange={(e) => {
+              e.preventDefault
+              setPrice(e.target.value)
+            }}
+          />
+        </Grid>
         <Grid size={6} item>
           <Button
             variant="outlined"
@@ -78,10 +126,10 @@ export default function Home() {
         </Grid>
         <Grid item container size={6} rowSpacing={1} columnSpacing={1}>
           <Grid size={12} item>
-            <BasicSelect />
+            <BasicSelect account={account} setAcount={setAccount}/>
           </Grid>
           <Grid size={12} item>
-            <DatePick />
+            <DatePick time={time} setTime={setTime}/>
           </Grid>
         </Grid>
 

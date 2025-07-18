@@ -9,12 +9,14 @@ export function authMiddleware(request) {
   
 
   const token = request.cookies.get('token')?.value;
-  
+  const { pathname } = request.nextUrl
   // 定義需要保護的路徑
-  const protectedPaths = ['/charts', '/profile', '/admin']
+  const protectedPaths = ['/','/charts', '/records', '/admin']
+  const authPaths = ['/login', '/register']
   const isProtectedPath = protectedPaths.some(path => 
-    request.nextUrl.pathname.startsWith(path)
+    pathname === path || pathname.startsWith(path + '/')
   )
+  const isAuthPath = authPaths.some(path => pathname.startsWith(path))
   
   // 如果是受保護的路徑但沒有 token，重定向到登入頁
   if (isProtectedPath && !token) {
@@ -22,8 +24,12 @@ export function authMiddleware(request) {
     loginUrl.searchParams.set('redirect', request.nextUrl.pathname)
     return NextResponse.redirect(loginUrl)
   }
+
+  if (token && isAuthPath) {
+    return NextResponse.redirect(new URL('/', request.url))
+  }
   
   return null
 }
 
-// 配置 middleware 執行的路徑
+

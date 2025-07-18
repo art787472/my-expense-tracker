@@ -14,6 +14,7 @@ import HouseIcon from '@mui/icons-material/House';
 import DirectionsCarIcon from '@mui/icons-material/DirectionsCar';
 import PaidIcon from '@mui/icons-material/Paid';
 import Box from '@mui/material/Box'; // Add this import at the top
+import ReasonPanel from '../components/ReasonPanel'
 
 function TabPanel(props) {
     const { children, value, index, ...other } = props;
@@ -60,40 +61,33 @@ const StyledToggleButtonGroup = styled(ToggleButtonGroup)(({ theme }) => ({
     },
 }));
 
-export default function CategoryTab() {
+export default function CategoryTab({category, setCategory, reason, setReason}) {
     const [value, setValue] = React.useState(0);
 
     const handleChange = (event, newValue) => {
+        
         setValue(newValue);
+        setCategory(event.target.name)
     };
 
     const [alignment, setAlignment] = React.useState('left');
 
     const handleAlignmentChange = (event, newAlignment) => {
         setAlignment(newAlignment);
+        setReason(event.target.value)
     };
     return (
     <>
-        <Tabs value={value} onChange={handleChange} aria-label="disabled tabs example" centered variant="scrollable" scrollButtons="auto" fullWidth >
-            <Tab label="食" icon={<RestaurantIcon />} />
-            <Tab label="衣" icon={<CheckroomIcon />} />
-            <Tab label="住" icon={<HouseIcon />} />
-            <Tab label="行" icon={<DirectionsCarIcon />} />
-            <Tab label="樂" icon={<DirectionsCarIcon />} />
-            <Tab label="其他" icon={<PaidIcon />} />
+        <Tabs value={value} onChange={handleChange} aria-label="disabled tabs example"  variant="scrollable" scrollButtons="auto" fullWidth >
+            <Tab name="食" label="食" icon={<RestaurantIcon />} />
+            <Tab name="衣" label="衣" icon={<CheckroomIcon />} />
+            <Tab name="住" label="住" icon={<HouseIcon />} />
+            <Tab name="行" label="行" icon={<DirectionsCarIcon />} />
+            <Tab name="樂" label="樂" icon={<DirectionsCarIcon />} />
+            <Tab name="其他" label="其他" icon={<PaidIcon />} />
         </Tabs>
         <TabPanel value={value} index={0} >
-            <StyledToggleButtonGroup
-                color="primary"
-                value={alignment}
-                exclusive
-                onChange={handleAlignmentChange}
-                aria-label="Platform"
-            >
-                <ToggleButton value="web">便當</ToggleButton>
-                <ToggleButton value="android">速食</ToggleButton>
-                <ToggleButton value="ios">麵</ToggleButton>
-            </StyledToggleButtonGroup>
+            <ReasonPanel />
         </TabPanel>
         <TabPanel value={value} index={1} >
             Item Two
