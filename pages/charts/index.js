@@ -1,3 +1,13 @@
+import Container from "@mui/material/Container"
+import CategoryPieChart from "../../components/CategoryPieChart"
+import CategoryBarChart from "../../components/CategoryBarChart"
+
 export default function Home() {
-    return <h1>This is charts</h1>
+    return (
+        <Container>
+            
+            <CategoryPieChart />
+            <CategoryBarChart />
+        </Container>
+    )
 }

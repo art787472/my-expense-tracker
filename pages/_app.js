@@ -8,7 +8,7 @@ import { CacheProvider } from '@emotion/react';
 import css from '../styles/global.css'; 
 import Layout from '../components/Layout'; // 導入您的佈局組件
 import { useRouter } from 'next/router'; // 導入 useRouter
-
+import UserProvider from '../store/UserProvider'
 
 
 export default function MyApp(props) {
@@ -29,9 +29,11 @@ export default function MyApp(props) {
         <CssBaseline />
         {showNav ? (
           // 如果需要顯示導航列，則使用 Layout 包裹 Component
-          <Layout>
-            <Component {...pageProps} />
-          </Layout>
+          <UserProvider>
+            <Layout>
+              <Component {...pageProps} />
+            </Layout>
+          </UserProvider>
         ) : (
           // 如果不需要導航列，則直接渲染 Component
           <Component {...pageProps} />

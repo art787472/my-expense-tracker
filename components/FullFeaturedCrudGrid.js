@@ -21,46 +21,30 @@ import {
   randomArrayItem,
 } from "@mui/x-data-grid-generator";
 
-const roles = ["Market", "Finance", "Development"];
-const randomRole = () => {
-  return randomArrayItem(roles);
-};
-
 const initialRows = [
   {
     id: randomId(),
-    name: randomTraderName(),
-    age: 25,
-    joinDate: randomCreatedDate(),
-    role: randomRole(),
+    dateTime: new Date(2023, 0, 1),
+    price: 100,
+    category: 'Food',
+    reason: 'Lunch',
+    account: 'Cash',
   },
   {
     id: randomId(),
-    name: randomTraderName(),
-    age: 36,
-    joinDate: randomCreatedDate(),
-    role: randomRole(),
+    dateTime: new Date(2023, 0, 2),
+    price: 250,
+    category: 'Transportation',
+    reason: 'Train ticket',
+    account: 'Credit Card',
   },
   {
     id: randomId(),
-    name: randomTraderName(),
-    age: 19,
-    joinDate: randomCreatedDate(),
-    role: randomRole(),
-  },
-  {
-    id: randomId(),
-    name: randomTraderName(),
-    age: 28,
-    joinDate: randomCreatedDate(),
-    role: randomRole(),
-  },
-  {
-    id: randomId(),
-    name: randomTraderName(),
-    age: 23,
-    joinDate: randomCreatedDate(),
-    role: randomRole(),
+    dateTime: new Date(2023, 0, 3),
+    price: 800,
+    category: 'Entertainment',
+    reason: 'Movie',
+    account: 'Cash',
   },
 ];
 
@@ -71,11 +55,11 @@ function EditToolbar(props) {
     const id = randomId();
     setRows((oldRows) => [
       ...oldRows,
-      { id, name: "", age: "", role: "", isNew: true },
+      { id, dateTime: new Date(), price: '', category: '', reason: '', account: '', isNew: true },
     ]);
     setRowModesModel((oldModel) => ({
       ...oldModel,
-      [id]: { mode: GridRowModes.Edit, fieldToFocus: "name" },
+      [id]: { mode: GridRowModes.Edit, fieldToFocus: 'dateTime' },
     }));
   };
 
@@ -135,37 +119,17 @@ export default function FullFeaturedCrudGrid() {
   };
 
   const columns = [
-    { field: "name", headerName: "Name", width: 180, editable: true },
+    { field: 'dateTime', headerName: '日期', width: 180, editable: true, type: 'dateTime' },
+    { field: 'price', headerName: '金額', width: 120, editable: true, type: 'number' },
+    { field: 'category', headerName: '類別', width: 180, editable: true },
+    { field: 'reason', headerName: '消費目的', width: 220, editable: true },
+    { field: 'account', headerName: '帳戶', width: 180, editable: true },
     {
-      field: "age",
-      headerName: "Age",
-      type: "number",
-      width: 80,
-      align: "left",
-      headerAlign: "left",
-      editable: true,
-    },
-    {
-      field: "joinDate",
-      headerName: "Join date",
-      type: "date",
-      width: 180,
-      editable: true,
-    },
-    {
-      field: "role",
-      headerName: "Department",
-      width: 220,
-      editable: true,
-      type: "singleSelect",
-      valueOptions: ["Market", "Finance", "Development"],
-    },
-    {
-      field: "actions",
-      type: "actions",
-      headerName: "Actions",
+      field: 'actions',
+      type: 'actions',
+      headerName: 'Actions',
       width: 100,
-      cellClassName: "actions",
+      cellClassName: 'actions',
       getActions: ({ id }) => {
         const isInEditMode = rowModesModel[id]?.mode === GridRowModes.Edit;
 
@@ -176,7 +140,7 @@ export default function FullFeaturedCrudGrid() {
               label="Save"
               material={{
                 sx: {
-                  color: "primary.main",
+                  color: 'primary.main',
                 },
               }}
               onClick={handleSaveClick(id)}

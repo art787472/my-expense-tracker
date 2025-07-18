@@ -14,7 +14,7 @@ import HouseIcon from '@mui/icons-material/House';
 import DirectionsCarIcon from '@mui/icons-material/DirectionsCar';
 import PaidIcon from '@mui/icons-material/Paid';
 import Box from '@mui/material/Box'; // Add this import at the top
-import Typography from '@mui/material/Typography'; // Add this import at the top
+
 function TabPanel(props) {
     const { children, value, index, ...other } = props;
 
@@ -28,7 +28,7 @@ function TabPanel(props) {
         >
             {value === index && (
                 <Box sx={{ p: 3 }}>
-                    <Typography>{children}</Typography>
+                    {children}
                 </Box>
             )}
         </div>

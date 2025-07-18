@@ -1,4 +1,5 @@
 import * as React from "react";
+import { useRouter } from 'next/router'
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
@@ -11,19 +12,60 @@ import Box from "@mui/material/Box";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
+import Snackbar from "@mui/material/Snackbar";
+import Alert from "@mui/material/Alert";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import NextLink from "next/link"; // Next.js Link for routing
+import axios from "axios";
+import UserContext from "../../store/user-context";
+
 
 // 您可以定義一個自定義主題，如果沒有則使用預設主題
 const defaultTheme = createTheme();
+
+ function CustomizedSnackbars({open, setOpen}) {
+  
+
+
+
+  const handleClose = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+
+    setOpen(false);
+  };
+
+  return (
+    <div>
+      
+      <Snackbar anchorOrigin={{ vertical:'top', horizontal:'center' }} open={open} autoHideDuration={6000} onClose={handleClose}>
+        <Alert
+          onClose={handleClose}
+          severity="success"
+          variant="filled"
+          sx={{ width: '100%' }}
+        >
+          登入成功!
+        </Alert>
+      </Snackbar>
+    </div>
+  );
+}
 
 export default function LoginPage() {
   const [email, setEmail] = React.useState("");
   const [password, setPassword] = React.useState("");
   const [rememberMe, setRememberMe] = React.useState(false);
   const [error, setError] = React.useState(""); // 用於顯示錯誤訊息
+  const [open, setOpen] = React.useState(false);
 
-  const handleSubmit = (event) => {
+  const router = useRouter()
+
+  const userCtx = React.useContext(UserContext)
+
+
+  const handleSubmit = async (event) => {
     event.preventDefault(); // 防止表單預設提交行為 (頁面刷新)
 
     // 這裡只是前端簡單的驗證，實際登入邏輯會與後端API互動
@@ -32,6 +74,33 @@ export default function LoginPage() {
       return;
     }
 
+    const data = {
+      account: email,
+      password: password
+    }
+
+    try {
+      const res = await axios.post('https://localhost:7283/api/account/login', data)
+      const token = res.data.data.accessToken
+      console.log(res)
+      console.log(token)
+      if(res.request?.status == 200) {
+        setOpen(true)
+        localStorage['token'] = token
+        document.cookie = `token=${token};`
+        
+        router.push('/')
+      }
+      console.log(userCtx.user)
+      
+    } catch(err) {
+      console.log(err.response.data.message)
+      console.log(err.status)
+      setError(err.response.data.message)
+      console.log(error)
+      
+      return;
+    }
     // 假設登入成功，通常會重定向到儀表板或其他頁面
     console.log({
       email: email,
@@ -39,11 +108,7 @@ export default function LoginPage() {
       rememberMe: rememberMe,
     });
     setError(""); // 清除錯誤訊息
-    alert("嘗試登入 (實際邏輯需後端處理)"); // 簡單提示
-    // 在真實應用中，這裡會呼叫後端 API
-    // 例如: axios.post('/api/login', { email, password })
-    //   .then(response => { router.push('/dashboard'); })
-    //   .catch(err => { setError('登入失敗，請檢查憑證。'); });
+    
   };
 
   return (
@@ -171,6 +236,9 @@ export default function LoginPage() {
           </Box>
         </Container>
       </Box>
+
+
+     <CustomizedSnackbars open={open} setOpen={setOpen}/>
     </ThemeProvider>
   );
 }
