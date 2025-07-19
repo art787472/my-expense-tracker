@@ -10,6 +10,7 @@ import LocalDiningIcon from '@mui/icons-material/LocalDining';
 import LocalBarIcon from '@mui/icons-material/LocalBar';
 import LocalCafeIcon from '@mui/icons-material/LocalCafe';
 import IcecreamIcon from '@mui/icons-material/Icecream';
+import AppleIcon from '@mui/icons-material/Apple';
 const Cell = ({ children }) => {
     return (
         <Grid size={3} display="flex" justifyContent="center" alignItems="center" flexDirection="column">{children}</Grid>
@@ -43,7 +44,7 @@ const data = [
     },
     {
         reason: "水果",
-        icon: <EggAltIcon />
+        icon: <AppleIcon />
     },
 ]
 
@@ -60,7 +61,7 @@ export default function ReasonPanel() {
 
             {data.map((datum, i) =>
                 <Cell>
-                    <ReasonButton index={i} value={value} setValue={setValue} icon={datum.icon} text={datum.reason} onClick={handleClick} />
+                    <ReasonButton key={i} index={i} value={value} setValue={setValue} icon={datum.icon} text={datum.reason} onClick={handleClick} />
                 </Cell>
             )}
         </Grid>

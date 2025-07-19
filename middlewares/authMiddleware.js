@@ -24,7 +24,7 @@ export function authMiddleware(request) {
     loginUrl.searchParams.set('redirect', request.nextUrl.pathname)
     return NextResponse.redirect(loginUrl)
   }
-
+  // 如果已經登入，訪問註冊或登入時就直接轉回首頁
   if (token && isAuthPath) {
     return NextResponse.redirect(new URL('/', request.url))
   }
