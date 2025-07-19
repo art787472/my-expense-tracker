@@ -80,18 +80,17 @@ export default function RegisterPage() {
     }
 
     try {
-      const res = await axios.post('https://localhost:7283/api/account/login', data)
-      const token = res.data.data.accessToken
+      const res = await axios.post('https://localhost:7283/api/account/register', data)
+      
       console.log(res)
-      console.log(token)
-      if(res.request?.status == 200) {
+      
+      if(res.request?.status == 201) {
         setOpen(true)
-        localStorage['token'] = token
-        document.cookie = `token=${token};`
         
-        router.push('/')
+        
+        router.push('/login')
       }
-      console.log(userCtx.user)
+      
       
     } catch(err) {
       console.log(err.response.data.message)
@@ -147,7 +146,7 @@ export default function RegisterPage() {
               <LockOutlinedIcon />
             </Avatar>
             <Typography component="h1" variant="h5">
-              登入您的帳戶
+              註冊您的帳戶
             </Typography>
             <Box
               component="form"
@@ -160,7 +159,7 @@ export default function RegisterPage() {
                 required
                 fullWidth
                 id="email"
-                label="電子郵件 / 使用者名稱"
+                label="使用者名稱"
                 name="email"
                 autoComplete="email"
                 autoFocus
@@ -208,9 +207,7 @@ export default function RegisterPage() {
                   size={6}
                   sx={{ display: "flex", justifyContent: "center" }}
                 >
-                  <NextLink href="/register" passHref legacyBehavior>
-                    <Link variant="body2">{"還沒有帳戶？註冊"}</Link>
-                  </NextLink>
+                  
                 </Grid>
               </Grid>
             </Box>

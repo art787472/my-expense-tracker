@@ -74,7 +74,7 @@ export default function CategoryTab({category, setCategory, reason, setReason}) 
 
     const handleAlignmentChange = (event, newAlignment) => {
         setAlignment(newAlignment);
-        setReason(event.target.value)
+        
     };
     return (
     <>
@@ -87,7 +87,7 @@ export default function CategoryTab({category, setCategory, reason, setReason}) 
             <Tab name="其他" label="其他" icon={<PaidIcon />} />
         </Tabs>
         <TabPanel value={value} index={0} >
-            <ReasonPanel />
+            <ReasonPanel setReason={setReason}/>
         </TabPanel>
         <TabPanel value={value} index={1} >
             Item Two

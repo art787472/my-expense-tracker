@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Grid } from "@mui/material";
 import IconButton from '@mui/material/IconButton';
 import AlarmIcon from '@mui/icons-material/Alarm';
@@ -48,20 +48,20 @@ const data = [
     },
 ]
 
-export default function ReasonPanel() {
+export default function ReasonPanel({setReason}) {
     const [value, setValue] = useState(0)
-    const handleClick = (e) => {
-        e.preventDefault()
+    
 
-        setValue(e.tartget)
-        console.log(e.tartget)
-    }
+    useEffect(() => {
+        console.log(value)
+        setReason(data[value].reason)
+    }, [value]);
     return (
         <Grid container width={'100%'}>
 
             {data.map((datum, i) =>
                 <Cell>
-                    <ReasonButton key={i} index={i} value={value} setValue={setValue} icon={datum.icon} text={datum.reason} onClick={handleClick} />
+                    <ReasonButton key={i} index={i} value={value} setValue={setValue} icon={datum.icon} text={datum.reason}  />
                 </Cell>
             )}
         </Grid>
