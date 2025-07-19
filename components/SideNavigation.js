@@ -14,7 +14,9 @@ import ListAltIcon from "@mui/icons-material/ListAlt";
 import SettingsIcon from "@mui/icons-material/Settings";
 import { useRouter } from "next/router"; // 用於 Next.js 的路由導航
 import Link from "next/link"; // 用於 Next.js 的 Link 組件
-
+import MenuList from '@mui/material/MenuList';
+import MenuItem from '@mui/material/MenuItem';
+import { Menu } from "@mui/material";
 // 定義側邊導覽列的寬度，通常與您在 Layout 中的設定一致
 const drawerWidth = 240;
 
@@ -25,13 +27,19 @@ export default function SideNavigation() {
   const [selectedIndex, setSelectedIndex] = React.useState(null);
 
   const handleListItemClick = (event, path, index) => {
+
+    if(path === "/account") {
+      
+      
+      return
+    }
     setSelectedIndex(index);
     router.push(path); // 導航到點擊的路徑
   };
 
   // 導覽項目數據，包含文字、圖標和對應的路徑
   const navItems = [
-    { label: "帳戶設定", icon: <AccountCircleIcon />, path: "/account" },
+    { label: "登出", icon: <AccountCircleIcon />, path: "/logout" },
     { label: "圖表", icon: <BarChartIcon />, path: "/charts" },
     { label: "新增記帳", icon: <AddCircleIcon />, path: "/add-entry" },
     { label: "記帳本", icon: <ListAltIcon />, path: "/records" },
@@ -50,12 +58,16 @@ export default function SideNavigation() {
         },
       }}
     >
-      {/* <Toolbar /> */}
       {/* 如果您在佈局中有一個 App Bar，通常會在 Drawer 頂部放置一個 Toolbar 
         來推開內容，與 App Bar 的高度對齊。
         如果沒有 App Bar，可以移除或調整這個 Toolbar。
-      */}
+        */}
       <Box sx={{ overflow: "auto" }}>
+        {/* <Menu open={true}>
+          <MenuItem>
+          登出
+          </MenuItem>
+        </Menu> */}
         <List>
           {navItems.map((item, index) => (
             <ListItem key={item.label} disablePadding>

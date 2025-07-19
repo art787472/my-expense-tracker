@@ -1,10 +1,11 @@
 import BottomNavigationBar from "../components/Select/BottomNavigation";
 import Container from "@mui/material/Container";
-
+import Toolbar from "@mui/material/Toolbar";
 import SideNavigation from "./SideNavigation";
 import useMediaQuery from "@mui/material/useMediaQuery"; // 響應式判斷
 import { useTheme } from "@mui/material/styles"; // 獲取 MUI 主題斷點
 import { Box } from "@mui/material";
+import ResponsiveAppBar from "./ResponsiveAppBar";
 
 const drawerWidth = 240;
 // <main className={styles.main}>
@@ -16,6 +17,7 @@ function Layout({ children }) {
     <>
       {!isDesktop && (
         <Box component={"main"} sx={{ width: "100%", height: `100dvh` }}>
+          
           <Container
             sx={{
               overflowX: "hidden",
@@ -43,6 +45,7 @@ function Layout({ children }) {
       )}
       {isDesktop && (
         <Box component={"main"} sx={{ width: "100%" }}>
+          
           <Box sx={{ display: "flex" }}>
             <Box
               component="nav"
@@ -64,8 +67,9 @@ function Layout({ children }) {
                 // overflowY: 'auto', // 如果內容可能超出螢幕，啟用垂直滾動
               }}
             >
+              <Toolbar />
               {/* 如果有 App Bar，您可以在這裡放置一個 <Toolbar /> 來推開內容，避免內容被 App Bar 遮擋 */}
-              {children}{" "}
+              {children}
               {/* 這裡會渲染您的頁面內容 (例如來自 pages/index.js 的內容) */}
             </Box>
           </Box>

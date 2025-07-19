@@ -10,6 +10,13 @@ import CategoryTab from "../components/CategoryTab";
 import DatePick from "../components/DatePick";
 import dayjs from 'dayjs';
 import axios from "../utils/axios";
+
+import https from "https";
+
+const agent = new https.Agent({
+  rejectUnauthorized: false, // 關閉憑證驗證（⚠️僅限開發環境）
+});
+
 export default function Home() {
   //const theme = useTheme();
   const [name, setName] = React.useState("")
@@ -18,6 +25,28 @@ export default function Home() {
   const [account, setAccount] = React.useState("")
   const [time, setTime]  = React.useState(dayjs())
   const [price, setPrice] = React.useState(0)
+  const [categories, setCategories] = React.useState([]);
+  const [loading, setLoading] = React.useState(true);
+  const [error, setError] = React.useState(null);
+  React.useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const response = await fetch('https://localhost:7283/api/category');
+        if (!response.ok) {
+          throw new Error('Failed to fetch categories');
+        }
+        const data = await response.json();
+        console.log(response)
+        setCategories(data.data);
+      } catch (err) {
+        setError(err.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchCategories();
+  }, []);
 
   const handleSubmit = async(e) => {
     const data = {
@@ -86,7 +115,7 @@ export default function Home() {
         </Grid>
 
         <Grid size={12} item>
-          <CategoryTab category={category} setCategory={setCategory} reason={reason} setReason={setReason}/>
+          <CategoryTab data={categories} category={category} setCategory={setCategory} reason={reason} setReason={setReason}/>
         </Grid>
 
         <Grid size={12} item>

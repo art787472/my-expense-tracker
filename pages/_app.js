@@ -9,6 +9,8 @@ import css from '../styles/global.css';
 import Layout from '../components/Layout'; // 導入您的佈局組件
 import { useRouter } from 'next/router'; // 導入 useRouter
 import UserProvider from '../store/UserProvider'
+import ResponsiveAppBar from '../components/ResponsiveAppBar';
+import UserAvatar from '../components/UserAvatar';
 
 
 export default function MyApp(props) {
@@ -16,8 +18,11 @@ export default function MyApp(props) {
   const router = useRouter(); // 初始化 useRouter
   const theme = useTheme(css);
   // 定義不需要導航列的路徑
-  const noNavRoutes = ['/login', '/register', '/forgot-password']; // 根據您的頁面路徑調整
+  const noNavRoutes = ['/login', '/register', 'logout', '/forgot-password']; // 根據您的頁面路徑調整
   const showNav = !noNavRoutes.includes(router.pathname);
+
+  const noAvatarRoutes = ['/login', '/register', 'logout', '/forgot-password']
+  const showAvatar = !noAvatarRoutes.includes(router.pathname)
 
   return (
    <>
@@ -30,6 +35,7 @@ export default function MyApp(props) {
         {showNav ? (
           // 如果需要顯示導航列，則使用 Layout 包裹 Component
           <UserProvider>
+            
             <Layout>
               <Component {...pageProps} />
             </Layout>

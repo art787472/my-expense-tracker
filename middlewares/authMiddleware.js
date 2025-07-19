@@ -11,7 +11,7 @@ export function authMiddleware(request) {
   const token = request.cookies.get('token')?.value;
   const { pathname } = request.nextUrl
   // 定義需要保護的路徑
-  const protectedPaths = ['/','/charts', '/records', '/admin']
+  const protectedPaths = ['/','/charts', '/records', '/admin', '/logout']
   const authPaths = ['/login', '/register']
   const isProtectedPath = protectedPaths.some(path => 
     pathname === path || pathname.startsWith(path + '/')
