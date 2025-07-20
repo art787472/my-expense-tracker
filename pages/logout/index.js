@@ -11,19 +11,17 @@ export default function Logout() {
 
         const handleLogout = async () => {
             try {
+                const refreshToken = localStorage.getItem('refreshToken');
                 localStorage.removeItem('token')
+                localStorage.removeItem('refreshToken')
                 document.cookie = 'token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;'
-                axios.post('logout')
+                axios.post('logout', {refreshToken})
                 router.replace('/login')
             } catch (error) {
                 router.replace('/login')
             }
 
         }
-
-
-
-
         handleLogout()
     }, [router])
     return (

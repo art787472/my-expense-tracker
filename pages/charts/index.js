@@ -5,7 +5,7 @@ import CategoryBarChart from "../../components/CategoryBarChart"
 export default function Home() {
     return (
         <Container>
-            
+
             <CategoryPieChart />
             <CategoryBarChart />
         </Container>

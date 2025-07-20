@@ -82,11 +82,13 @@ export default function LoginPage() {
     try {
       const res = await axios.post('https://localhost:7283/api/account/login', data)
       const token = res.data.data.accessToken
+      const refreshToken = res.data.data.refreshToken
       console.log(res)
       console.log(token)
       if(res.request?.status == 200) {
         setOpen(true)
         localStorage['token'] = token
+        localStorage['refreshToken'] = refreshToken
         document.cookie = `token=${token};`
         
         router.push('/')
@@ -94,9 +96,9 @@ export default function LoginPage() {
       console.log(userCtx.user)
       
     } catch(err) {
-      console.log(err.response.data.message)
+     
       console.log(err.status)
-      setError(err.response.data.message)
+      setError(err.response?.data?.message)
       console.log(error)
       
       return;
