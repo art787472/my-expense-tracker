@@ -12,7 +12,7 @@ const chartSetting = {
   height: 300,
 };
 const data = [
-  { food: 100, clothes: 200, living: 200, traffic: 0, week: "第一周"},
+            { food: 100, clothes: 200, living: 200, traffic: 0, week: "第一周"},
             { food: 100, clothes: 200, living: 200, traffic: 0, week: "第二周"},
             { food: 100, clothes: 200, living: 200, traffic: 0, week: "第三周"},
             { food: 100, clothes: 200, living: 200, traffic: 0, week: "第四周"},

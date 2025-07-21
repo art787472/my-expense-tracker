@@ -23,8 +23,8 @@ import UserContext from "../../store/user-context";
 // 您可以定義一個自定義主題，如果沒有則使用預設主題
 const defaultTheme = createTheme();
 
- function CustomizedSnackbars({open, setOpen}) {
-  
+function CustomizedSnackbars({ open, setOpen }) {
+
 
 
 
@@ -38,8 +38,8 @@ const defaultTheme = createTheme();
 
   return (
     <div>
-      
-      <Snackbar anchorOrigin={{ vertical:'top', horizontal:'center' }} open={open} autoHideDuration={6000} onClose={handleClose}>
+
+      <Snackbar anchorOrigin={{ vertical: 'top', horizontal: 'center' }} open={open} autoHideDuration={6000} onClose={handleClose}>
         <Alert
           onClose={handleClose}
           severity="success"
@@ -81,26 +81,29 @@ export default function LoginPage() {
 
     try {
       const res = await axios.post('https://localhost:7283/api/account/login', data)
-      const token = res.data.data.accessToken
-      const refreshToken = res.data.data.refreshToken
-      console.log(res)
-      console.log(token)
-      if(res.request?.status == 200) {
-        setOpen(true)
-        localStorage['token'] = token
-        localStorage['refreshToken'] = refreshToken
-        document.cookie = `token=${token};`
-        
-        router.push('/')
+      
+      if (res.request?.status == 200) {
+        const token = res.data.data.accessToken
+        const refreshToken = res.data.data.refreshToken
+        const userData = res.data.data.user
+        userCtx.loginUser(userData, token);
+
+        // 仍然保存到 localStorage（為了持久化）
+        localStorage['token'] = token;
+        localStorage['refreshToken'] = refreshToken;
+        document.cookie = `token=${token};`;
+
+        setOpen(true);
+        router.push('/');
       }
-      console.log(userCtx.user)
       
-    } catch(err) {
-     
-      console.log(err.status)
+
+    } catch (err) {
+
+      console.log(err)
       setError(err.response?.data?.message)
-      console.log(error)
       
+
       return;
     }
     // 假設登入成功，通常會重定向到儀表板或其他頁面
@@ -110,7 +113,7 @@ export default function LoginPage() {
       rememberMe: rememberMe,
     });
     setError(""); // 清除錯誤訊息
-    
+
   };
 
   return (
@@ -240,7 +243,7 @@ export default function LoginPage() {
       </Box>
 
 
-     <CustomizedSnackbars open={open} setOpen={setOpen}/>
+      <CustomizedSnackbars open={open} setOpen={setOpen} />
     </ThemeProvider>
   );
 }

@@ -3,10 +3,13 @@ import { createContext } from "react"
 
 const UserContext = createContext({
         user: {
-            account: ""
+            account: "",
+            userId: ""
         },
         token: "",
-        login: false
+        login: false,
+        loginUser: () => {}, // 加入預設的空函數
+    logoutUser: () => {} // 加入預設的空函數
     }
 )
 

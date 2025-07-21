@@ -19,16 +19,9 @@ function PieCenterLabel({ children }) {
   );
 }
 
-const data = [
-            { id: 0, value: 1000, label: '食' },
-            { id: 1, value: 1500, label: '衣' },
-            { id: 2, value: 2000, label: '住' },
-            { id: 3, value: 120, label: '行' },
-            { id: 4, value: 800, label: '樂' },
-            { id: 5, value: 500, label: '其他' },
-          ]
 
-export default function CategoryPieChart() {
+
+export default function CategoryPieChart({data}) {
   return (
     <PieChart
       series={[

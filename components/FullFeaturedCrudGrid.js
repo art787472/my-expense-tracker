@@ -6,6 +6,8 @@ import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/DeleteOutlined";
 import SaveIcon from "@mui/icons-material/Save";
 import CancelIcon from "@mui/icons-material/Close";
+import axios from "../utils/axios"
+import UserContext from "../store/user-context"
 import {
   GridRowModes,
   DataGrid,
@@ -21,32 +23,7 @@ import {
   randomArrayItem,
 } from "@mui/x-data-grid-generator";
 
-const initialRows = [
-  {
-    id: randomId(),
-    dateTime: new Date(2023, 0, 1),
-    price: 100,
-    category: 'Food',
-    reason: 'Lunch',
-    account: 'Cash',
-  },
-  {
-    id: randomId(),
-    dateTime: new Date(2023, 0, 2),
-    price: 250,
-    category: 'Transportation',
-    reason: 'Train ticket',
-    account: 'Credit Card',
-  },
-  {
-    id: randomId(),
-    dateTime: new Date(2023, 0, 3),
-    price: 800,
-    category: 'Entertainment',
-    reason: 'Movie',
-    account: 'Cash',
-  },
-];
+
 
 function EditToolbar(props) {
   const { setRows, setRowModesModel } = props;
@@ -75,9 +52,26 @@ function EditToolbar(props) {
 }
 
 export default function FullFeaturedCrudGrid() {
-  const [rows, setRows] = React.useState(initialRows);
+  const [rows, setRows] = React.useState([]);
   const [rowModesModel, setRowModesModel] = React.useState({});
+  const userCtx = React.useContext(UserContext);
+  const user = userCtx.user
+  React.useEffect(()=>{
+    const initialize = async () => {
+      const response = await axios.get(`https://localhost:7283/api/expense?userId=${user.userId}`)
+      const data = response.data
+      const rederData = data.map(datum => {
+        return {
+          ...datum,
+          dateTime: new Date(datum.dateTime)
 
+        }
+      })
+      setRows(rederData)
+    }
+
+    initialize()
+  }, [])
   const handleRowEditStop = (params, event) => {
     if (params.reason === GridRowEditStopReasons.rowFocusOut) {
       event.defaultMuiPrevented = true;
