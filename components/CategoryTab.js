@@ -52,7 +52,7 @@ export default function CategoryTab({data, setCategory, reason, setReason}) {
         setValue(newValue);
         setCategory(event.target.name)
     };
-    console.log(data)
+    
     const [alignment, setAlignment] = React.useState('left');
 
     const handleAlignmentChange = (event, newAlignment) => {

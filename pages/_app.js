@@ -32,18 +32,19 @@ export default function MyApp(props) {
       <ThemeProvider theme={theme}>
         {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
         <CssBaseline />
+        <UserProvider>
         {showNav ? (
           // 如果需要顯示導航列，則使用 Layout 包裹 Component
-          <UserProvider>
             
             <Layout>
               <Component {...pageProps} />
             </Layout>
-          </UserProvider>
         ) : (
           // 如果不需要導航列，則直接渲染 Component
+          
           <Component {...pageProps} />
         )}
+        </UserProvider>
       </ThemeProvider>
     </>
   );

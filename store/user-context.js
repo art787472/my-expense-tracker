@@ -9,7 +9,7 @@ const UserContext = createContext({
         token: "",
         login: false,
         loginUser: () => {}, // 加入預設的空函數
-    logoutUser: () => {} // 加入預設的空函數
+        logoutUser: () => {} // 加入預設的空函數
     }
 )
 

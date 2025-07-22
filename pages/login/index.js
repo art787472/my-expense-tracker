@@ -64,6 +64,12 @@ export default function LoginPage() {
 
   const userCtx = React.useContext(UserContext)
 
+  React.useEffect(() => {
+    if (userCtx.login) {
+        console.log("用戶狀態已更新:");
+        console.log(userCtx.user);
+    }
+}, [userCtx.user, userCtx.login]);
 
   const handleSubmit = async (event) => {
     event.preventDefault(); // 防止表單預設提交行為 (頁面刷新)
@@ -86,9 +92,11 @@ export default function LoginPage() {
         const token = res.data.data.accessToken
         const refreshToken = res.data.data.refreshToken
         const userData = res.data.data.user
+        console.info(userData)
         userCtx.loginUser(userData, token);
-
-        // 仍然保存到 localStorage（為了持久化）
+        console.info("user: " + userData)
+        console.log("user:")
+        console.log(userCtx.user)
         localStorage['token'] = token;
         localStorage['refreshToken'] = refreshToken;
         document.cookie = `token=${token};`;

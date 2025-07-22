@@ -36,7 +36,7 @@ export default function Home() {
           throw new Error('Failed to fetch categories');
         }
         const data = await response.json();
-        console.log(response)
+       
         setCategories(data.data);
       } catch (err) {
         setError(err.message);
