@@ -41,7 +41,7 @@ export default function SideNavigation() {
   const navItems = [
     { label: "登出", icon: <AccountCircleIcon />, path: "/logout" },
     { label: "圖表", icon: <BarChartIcon />, path: "/charts" },
-    { label: "新增記帳", icon: <AddCircleIcon />, path: "/add-entry" },
+    { label: "新增記帳", icon: <AddCircleIcon />, path: "/" },
     { label: "記帳本", icon: <ListAltIcon />, path: "/records" },
     { label: "設定", icon: <SettingsIcon />, path: "/settings" },
   ];

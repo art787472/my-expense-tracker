@@ -27,7 +27,7 @@ export default function BottomNavigationBar() {
         <BottomNavigationAction label="圖表" icon={<BarChartIcon />} />
         <BottomNavigationAction label="新增記帳" icon={<AddCircleIcon />} />
         <BottomNavigationAction label="記帳本" icon={<ListAltIcon />} />
-          <BottomNavigationAction label="設定" icon={<SettingsIcon />} />
+        <BottomNavigationAction label="設定" icon={<SettingsIcon />} />
           
       </BottomNavigation>
     </Box>

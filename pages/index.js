@@ -10,8 +10,10 @@ import CategoryTab from "../components/CategoryTab";
 import DatePick from "../components/DatePick";
 import dayjs from 'dayjs';
 import axios from "../utils/axios";
-
+import { TimePicker } from '@mui/x-date-pickers/TimePicker';
 import https from "https";
+import { Snackbar } from "@mui/material";
+import Alert from "@mui/material/Alert";
 
 const agent = new https.Agent({
   rejectUnauthorized: false, // 關閉憑證驗證（⚠️僅限開發環境）
@@ -23,11 +25,24 @@ export default function Home() {
   const [category, setCategory] = React.useState("食")
   const [reason, setReason] = React.useState("便當")
   const [account, setAccount] = React.useState("")
-  const [time, setTime]  = React.useState(dayjs())
+  const [time, setTime] = React.useState(dayjs())
   const [price, setPrice] = React.useState(0)
   const [categories, setCategories] = React.useState([]);
   const [loading, setLoading] = React.useState(true);
   const [error, setError] = React.useState(null);
+  const [file, setFile] = React.useState(null)
+  const [previewUrl, setPreviewUrl] = React.useState(null);
+  const [open, setOpen] = React.useState(false)
+  const [alertMessage, setAlertMessage] = React.useState("")
+  const fileInputRef = React.useRef(null);
+  const handleClose = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+
+    setOpen(false);
+  };
+
   React.useEffect(() => {
     const fetchCategories = async () => {
       try {
@@ -36,7 +51,7 @@ export default function Home() {
           throw new Error('Failed to fetch categories');
         }
         const data = await response.json();
-       
+
         setCategories(data.data);
       } catch (err) {
         setError(err.message);
@@ -47,9 +62,14 @@ export default function Home() {
 
     fetchCategories();
   }, []);
+  const handleUpload = async (e) => {
+    if (fileInputRef.current) {
+      fileInputRef.current.click();
+    }
+  }
 
-  const handleSubmit = async(e) => {
-    const data = {
+  const handleSubmit = async (e) => {
+    let data = {
       name,
       category,
       reason,
@@ -57,20 +77,53 @@ export default function Home() {
       dateTime: time.format(),
       price
     }
-    console.log(data)
-    try {
 
+
+
+    if (file) {
+      const formData = new FormData();
+      formData.append('files', file);
+      try {
+        const imgUploadResponse = await axios.post(process.env.NEXT_PUBLIC_BASE_URL + 'image', formData)
+        if (imgUploadResponse.request?.status === 200) {
+          const picPath = imgUploadResponse.data.path
+          data = { ...data, picPath }
+        }
+
+        
+      } catch (error) {
+        console.error(error)
+      }
+    }
+
+    try {
       const response = await axios.post(`https://localhost:7283/api/expense`, data)
 
-      if(res.request?.status == 200) {
-        
-      }
+        if(response.status === 200) {
+          setAlertMessage("上傳成功")
+          setOpen(true)
+        }
 
-    } catch(err) {
+    } catch (err) {
       console.log(err)
     }
-    console.log(data)
+
   }
+
+  const handleFileChange = (event) => {
+    const file = event.target.files[0];
+    console.log(file)
+    if (file && file.type.startsWith('image/')) {
+
+      if (previewUrl) {
+        URL.revokeObjectURL(previewUrl);
+      }
+
+      const imageUrl = URL.createObjectURL(file);
+      setPreviewUrl(imageUrl);
+      setFile(file)
+    }
+  };
 
   return (
     <>
@@ -115,7 +168,7 @@ export default function Home() {
         </Grid>
 
         <Grid size={12} item>
-          <CategoryTab data={categories} category={category} setCategory={setCategory} reason={reason} setReason={setReason}/>
+          <CategoryTab data={categories} category={category} setCategory={setCategory} reason={reason} setReason={setReason} />
         </Grid>
 
         <Grid size={12} item>
@@ -131,7 +184,7 @@ export default function Home() {
             }}
           />
         </Grid>
-            <Grid size={12} item>
+        <Grid size={12} item>
           <TextField
             id="outlined-basic"
             label="費用"
@@ -145,20 +198,44 @@ export default function Home() {
           />
         </Grid>
         <Grid size={6} item>
+
           <Button
             variant="outlined"
-            startIcon={<ImageIcon />}
-            sx={{ width: "100%", height: "100%" }}
+            startIcon={!previewUrl && <ImageIcon />}
+            sx={{ width: "100%", height: "100%", textTransform: "none" }}
+            onClick={handleUpload}
           >
-            上傳照片
+            {previewUrl ? (
+              <img
+                src={previewUrl}
+                alt="預覽圖片"
+                style={{
+                  height: '100%',
+                  maxHeight: '50px',
+                  objectFit: 'contain'
+                }}
+              />
+            ) : (
+              '上傳照片'
+            )}
           </Button>
+          <input
+            ref={fileInputRef}
+            type="file"
+            accept="image/*"
+            style={{ display: 'none' }}
+            onChange={handleFileChange}
+          />
         </Grid>
         <Grid item container size={6} rowSpacing={1} columnSpacing={1}>
           <Grid size={12} item>
-            <BasicSelect account={account} setAcount={setAccount}/>
+            <BasicSelect account={account} setAcount={setAccount} />
           </Grid>
           <Grid size={12} item>
-            <DatePick time={time} setTime={setTime}/>
+            <DatePick time={time} setTime={setTime} />
+          </Grid>
+          <Grid size={12}>
+
           </Grid>
         </Grid>
 
@@ -173,6 +250,16 @@ export default function Home() {
           />
         </Grid>
       </Grid>
+      <Snackbar anchorOrigin={{ vertical: 'top', horizontal: 'center' }} open={open} autoHideDuration={6000} onClose={handleClose}>
+        <Alert
+          onClose={handleClose}
+          severity="success"
+          variant="filled"
+          sx={{ width: '100%' }}
+        >
+          {alertMessage}
+        </Alert>
+      </Snackbar>
     </>
   );
 }
