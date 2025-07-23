@@ -18,7 +18,7 @@ import { createTheme, ThemeProvider } from "@mui/material/styles";
 import NextLink from "next/link"; // Next.js Link for routing
 import axios from "axios";
 import UserContext from "../../store/user-context";
-
+import Cookies from 'js-cookie'
 
 // 您可以定義一個自定義主題，如果沒有則使用預設主題
 const defaultTheme = createTheme();
@@ -86,20 +86,16 @@ export default function LoginPage() {
     }
 
     try {
-      const res = await axios.post('https://localhost:7283/api/account/login', data)
+      const res = await axios.post('https://localhost:7283/api/account/login', data, { withCredentials: true })
       
       if (res.request?.status == 200) {
         const token = res.data.data.accessToken
-        const refreshToken = res.data.data.refreshToken
-        const userData = res.data.data.user
-        console.info(userData)
-        userCtx.loginUser(userData, token);
-        console.info("user: " + userData)
-        console.log("user:")
-        console.log(userCtx.user)
+        
+        
         localStorage['token'] = token;
-        localStorage['refreshToken'] = refreshToken;
-        document.cookie = `token=${token};`;
+        localStorage['user'] = JSON.stringify(res.data.data.user);
+        
+        Cookies.set('token', token)
 
         setOpen(true);
         router.push('/');

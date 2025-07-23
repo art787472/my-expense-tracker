@@ -26,7 +26,7 @@ export async function getStaticProps () {
       throw new Error(`HTTP error! status: ${response.status}`);
     }
   const data = await res.json()
-  console.log(data)
+  
 
   return {
     props: {
@@ -58,7 +58,7 @@ export default function Home({categoriesData}) {
 
     setOpen(false);
   };
-  console.log(categoriesData)
+  
   // React.useEffect(() => {
   //   const fetchCategories = async () => {
   //     try {

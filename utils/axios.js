@@ -1,10 +1,12 @@
 import axios from "axios";
 import https from 'https';
+import Cookies from 'js-cookie'
 const instance = axios.create({
   
   httpsAgent: new https.Agent({  
     rejectUnauthorized: false 
-  })
+  }),
+  withCredentials: true
   })
 
 instance.interceptors.request.use((config) => {
@@ -29,22 +31,24 @@ instance.interceptors.response.use(
             originalRequest._retry = true;
             
             try {
-                const refreshToken = localStorage.getItem('refreshToken');
-                const accessToken = localStorage.getItem('token');
                 
-                const res = await axios.post('https://localhost:7283/api/account/token', {
-                    accessToken, 
-                    refreshToken
+                
+                const accessToken = Cookie.get('token');
+                console.log(accessToken)
+                const res = await instance.post('https://localhost:7283/api/account/token', {
+                    accessToken
+                   
                 });
                 
                 console.log('成功refresh token');
                 
                 const newAccessToken = res.data.data.accessToken;
-                const newRefreshToken = res.data.data.refreshToken;
+                
                 
                 // 儲存新的 tokens
                 localStorage.setItem('token', newAccessToken);
-                localStorage.setItem('refreshToken', newRefreshToken);
+                Cookies.remove('token')
+                Cookies.set('token', accessToken)
                 
                 // 更新原始請求的 Authorization header
                 originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
