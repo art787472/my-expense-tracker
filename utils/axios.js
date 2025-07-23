@@ -1,6 +1,11 @@
 import axios from "axios";
-
-const instance = axios.create();
+import https from 'https';
+const instance = axios.create({
+  
+  httpsAgent: new https.Agent({  
+    rejectUnauthorized: false 
+  })
+  })
 
 instance.interceptors.request.use((config) => {
     const token = localStorage.getItem('token');

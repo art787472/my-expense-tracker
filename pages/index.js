@@ -14,12 +14,28 @@ import { TimePicker } from '@mui/x-date-pickers/TimePicker';
 import https from "https";
 import { Snackbar } from "@mui/material";
 import Alert from "@mui/material/Alert";
-
+import cookie from 'cookie';
 const agent = new https.Agent({
   rejectUnauthorized: false, // 關閉憑證驗證（⚠️僅限開發環境）
 });
 
-export default function Home() {
+export async function getStaticProps () {
+  process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
+  const res = await fetch ('https://localhost:7283/api/category')
+    if (!res.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+  const data = await res.json()
+  console.log(data)
+
+  return {
+    props: {
+      categoriesData: data
+    }
+  }
+}
+
+export default function Home({categoriesData}) {
   //const theme = useTheme();
   const [name, setName] = React.useState("")
   const [category, setCategory] = React.useState("食")
@@ -42,26 +58,26 @@ export default function Home() {
 
     setOpen(false);
   };
+  console.log(categoriesData)
+  // React.useEffect(() => {
+  //   const fetchCategories = async () => {
+  //     try {
+  //       const response = await fetch('https://localhost:7283/api/category');
+  //       if (!response.ok) {
+  //         throw new Error('Failed to fetch categories');
+  //       }
+  //       const data = await response.json();
 
-  React.useEffect(() => {
-    const fetchCategories = async () => {
-      try {
-        const response = await fetch('https://localhost:7283/api/category');
-        if (!response.ok) {
-          throw new Error('Failed to fetch categories');
-        }
-        const data = await response.json();
+  //       setCategories(data.data);
+  //     } catch (err) {
+  //       setError(err.message);
+  //     } finally {
+  //       setLoading(false);
+  //     }
+  //   };
 
-        setCategories(data.data);
-      } catch (err) {
-        setError(err.message);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchCategories();
-  }, []);
+  //   fetchCategories();
+  // }, []);
   const handleUpload = async (e) => {
     if (fileInputRef.current) {
       fileInputRef.current.click();
@@ -168,7 +184,7 @@ export default function Home() {
         </Grid>
 
         <Grid size={12} item>
-          <CategoryTab data={categories} category={category} setCategory={setCategory} reason={reason} setReason={setReason} />
+          <CategoryTab data={categoriesData.data} category={category} setCategory={setCategory} reason={reason} setReason={setReason} />
         </Grid>
 
         <Grid size={12} item>

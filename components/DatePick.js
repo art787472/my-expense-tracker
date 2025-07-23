@@ -4,6 +4,7 @@ import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { TimePicker } from '@mui/x-date-pickers/TimePicker';
 import { useState } from 'react';
 import dayjs from 'dayjs';
+import { zhTW } from '@mui/x-date-pickers/locales';
 
 export default function DatePick({time, setTime}) {
     const [timeValue, setTimeValue] = useState(time)
@@ -28,7 +29,7 @@ export default function DatePick({time, setTime}) {
         console.log(newTimeValue)
     }
     return (
-        <LocalizationProvider dateAdapter= { AdapterDayjs } adapterLocale="zh-cn" >
+        <LocalizationProvider dateAdapter= { AdapterDayjs } adapterLocale={zhTW} >
             <TimePicker label="時間" defaultValue = { dayjs()}sx = {{ width: '100%',  marginBottom: 1}} onChange={handleTimeChange}/>
             <DatePicker label="日期" defaultValue = { dayjs() } sx = {{ width: '100%' }} value={time} onChange={handleChange} />
         </LocalizationProvider>
