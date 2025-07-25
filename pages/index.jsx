@@ -30,7 +30,7 @@ export async function getStaticProps () {
 
   return {
     props: {
-      categoriesData: data
+      categoriesData: data.data
     }
   }
 }
@@ -184,7 +184,7 @@ export default function Home({categoriesData}) {
         </Grid>
 
         <Grid size={12} item>
-          <CategoryTab data={categoriesData.data} category={category} setCategory={setCategory} reason={reason} setReason={setReason} />
+          <CategoryTab data={categoriesData} category={category} setCategory={setCategory} reason={reason} setReason={setReason} />
         </Grid>
 
         <Grid size={12} item>

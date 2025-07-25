@@ -10,7 +10,7 @@ import Select from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
 import axios from "../utils/axios"
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
-import renderSubCategorySelectBoxEditInputCell from "./SubCategorySelectBoxEditCell";
+import SubCategorySelectBoxEditCell from "./SubCategorySelectBoxEditCell";
 import renderExpenseAccountSelectBoxEditInputCell from "./ExpenseAccountSelectBoxEditCell";
 
 import {
@@ -31,19 +31,12 @@ import {
 } from "@mui/x-data-grid-generator";
 import { renderDateViewCalendar } from "@mui/x-date-pickers/dateViewRenderers";
 
-function rederCategorySelectBox(params) {
-  return (
-    <Select value={params.value} >
-      <MenuItem value={"飲食"}>飲食</MenuItem>
-        <MenuItem value={"玩樂"}>玩樂</MenuItem>
-        <MenuItem value={"教育"}>教育</MenuItem>
-    </Select>)
-}
+
 
 
 
 function CategorySelectBoxEditCell(props) {
-  const {id, value, field, hasFocus} = props
+  const {id, value, field, hasFocus, categories} = props
   const apiRef = useGridApiContext()
   const ref = React.useRef(null)
 
@@ -63,15 +56,14 @@ function CategorySelectBoxEditCell(props) {
   return(
     <Box>
     <Select value={value} ref={ref}  onChange={handleChange}>
+      {categories.map(c => <MenuItem value={c.name}>{c.name}</MenuItem>)}
       <MenuItem value={"飲食"}>飲食</MenuItem>
         <MenuItem value={"玩樂"}>玩樂</MenuItem>
         <MenuItem value={"教育"}>教育</MenuItem>
     </Select></Box>)
 }
 
-const renderCategorySelectBoxEditInputCell = (params) => {
-  return <CategorySelectBoxEditCell {...params} />;
-};
+
 
 function EditToolbar(props) {
   const { setRows, setRowModesModel } = props;
@@ -99,10 +91,17 @@ function EditToolbar(props) {
   );
 }
 
-export default function FullFeaturedCrudGrid({rows, setRows, userId}) {
+export default function FullFeaturedCrudGrid({rows, setRows, userId, categoriesData}) {
   
   const [rowModesModel, setRowModesModel] = React.useState({});
-  
+  const renderCategorySelectBoxEditInputCell = (params) => {
+    
+  return <CategorySelectBoxEditCell {...params} categories={categoriesData} />;
+};
+
+const renderSubCategorySelectBoxEditInputCell =  (params)=>  {
+  return <SubCategorySelectBoxEditCell  {...params} categories={categoriesData}/>;
+};
   
   const handleRowEditStop = (params, event) => {
     if (params.reason === GridRowEditStopReasons.rowFocusOut) {
@@ -123,7 +122,7 @@ export default function FullFeaturedCrudGrid({rows, setRows, userId}) {
     setRows(rows.filter((row) => row.id !== id));
 
     const deleteUrl = process.env.NEXT_PUBLIC_BASE_URL + `expense/${id}`
-    console.log(deleteUrl)
+    
     const deleteApi = async () => {
       try {
         const response = await axios.delete(deleteUrl)
@@ -151,8 +150,7 @@ export default function FullFeaturedCrudGrid({rows, setRows, userId}) {
   const processRowUpdate = (newRow) => {
     const updatedRow = { ...newRow, isNew: false };
     setRows(rows.map((row) => (row.id === newRow.id ? updatedRow : row)));
-    console.log(rows)
-    console.log(newRow)
+    
     const editUrl = process.env.NEXT_PUBLIC_BASE_URL + `expense/${newRow.id}`
     const updateApi = async () => {
       try {
@@ -171,6 +169,7 @@ export default function FullFeaturedCrudGrid({rows, setRows, userId}) {
 
   const columns = [
     { field: 'dateTime', headerName: '日期', width: 180, editable: true, type: 'dateTime' },
+    { field: 'name', headerName: '名稱', width: 180, editable: true },
     { field: 'price', headerName: '金額', width: 120, editable: true, type: 'number' },
     { field: 'category', headerName: '類別', width: 180, editable: true, renderEditCell: renderCategorySelectBoxEditInputCell },
     { field: 'reason', headerName: '消費目的', width: 220, editable: true, renderEditCell: renderSubCategorySelectBoxEditInputCell },

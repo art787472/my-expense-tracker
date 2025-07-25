@@ -3,16 +3,16 @@ import Box from "@mui/material/Box";
 import Select from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
 import useEnhancedEffect from '@mui/utils/useEnhancedEffect';
-import {useGridApiContext,
+import {
+  useGridApiContext,
 } from "@mui/x-data-grid";
 function CategorySelectBoxEditCell(props) {
-  const {id, value, field, hasFocus} = props
+  const { id, value, field, hasFocus, accounts } = props
   const apiRef = useGridApiContext()
   const ref = React.useRef(null)
 
   const handleChange = (event, newValue) => {
-    console.log("newValue:")
-    console.log(newValue)
+
     apiRef.current.setEditCellValue({ id, field, value: newValue.props.value });
   };
 
@@ -23,16 +23,17 @@ function CategorySelectBoxEditCell(props) {
     }
   }, [hasFocus, value]);
 
-  return(
+  return (
     <Box>
-    <Select value={value} ref={ref}  onChange={handleChange}>
-      <MenuItem value={"現金"}>現金</MenuItem>
+      <Select value={value} ref={ref} onChange={handleChange}>
+        {/* {accounts.map(a => <MenuItem value={a.name}>{a.name}</MenuItem>)} */}
+        <MenuItem value={"現金"}>現金</MenuItem>
         <MenuItem value={"銀行"}>銀行</MenuItem>
         <MenuItem value={"行動支付"}>行動支付</MenuItem>
         <MenuItem value={"Visa"}>Visa</MenuItem>
-    </Select></Box>)
+      </Select></Box>)
 }
 
-export default function renderExpenseAccountSelectBoxEditInputCell  (params)  {
+export default function renderExpenseAccountSelectBoxEditInputCell(params) {
   return <CategorySelectBoxEditCell {...params} />;
 };

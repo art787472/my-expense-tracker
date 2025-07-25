@@ -33,8 +33,8 @@ instance.interceptors.response.use(
             try {
                 
                 
-                const accessToken = Cookie.get('token');
-                console.log(accessToken)
+                const accessToken = Cookies.get('token');
+                
                 const res = await instance.post('https://localhost:7283/api/account/token', {
                     accessToken
                    
