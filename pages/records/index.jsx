@@ -24,7 +24,7 @@ export default function Home({ categoriesData }) {
   const [rows, setRows] = useState([]);
   const [user, setUser] = useState(null);
   const userCtx = useContext(UserContext);
-  
+  const sc = categoriesData.flatMap(c => c.subCategories)
 
   useEffect(()=>{
 
@@ -43,12 +43,15 @@ export default function Home({ categoriesData }) {
       const rederData = data.map(datum => {
         return {
           ...datum,
+          category: datum.categoryId,
+          subCategory: datum.subCategoryId,
+          account: "visa",
           dateTime: new Date(datum.dateTime)
 
         }
       })
       setRows(rederData)
-      
+      console.log(rederData)
     }
 
     initialize()

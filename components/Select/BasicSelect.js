@@ -6,6 +6,8 @@ import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
 //import { Link as RouterLink, MemoryRouter, StaticRouter } from 'react-router';
 
+
+
 export default function BasicSelect({account, setAcount}) {
   const [age, setAge] = React.useState('');
 
@@ -24,9 +26,10 @@ export default function BasicSelect({account, setAcount}) {
           label="account"
           onChange={handleChange}
         >
-          <MenuItem value={"銀行"}>銀行</MenuItem>
-          <MenuItem value={"Visa"}>Visa</MenuItem>
-          <MenuItem value={"行動支付"}>行動支付</MenuItem>
+          <MenuItem value={1}>現金</MenuItem>
+          <MenuItem value={2}>銀行</MenuItem>
+          <MenuItem value={3}>行動支付</MenuItem>
+          <MenuItem value={4}>Visa</MenuItem>
         </Select>
       </FormControl>
     </Box>

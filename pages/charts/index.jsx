@@ -5,6 +5,7 @@ import CategoryBarChart from "../../components/CategoryBarChart"
 import axios from "../../utils/axios"
 import UserContext from "../../store/user-context"
 import { get, groupBy, toPairs } from "lodash"
+import Cookies from "js-cookie"
 
 function getWeekOfMonth(dateStr) {
   const date = new Date(dateStr);
@@ -36,11 +37,11 @@ function groupByWeekAndCategory(records) {
 export default function Home() {
     const [data, setData] = useState([])
     const userCtx = useContext(UserContext);
-  const user = userCtx.user
     useEffect(()=>{
-    const initialize = async () => {
-      const response = await axios.get(`https://localhost:7283/api/expense?userId=${user.userId}`)
-      const data = response.data
+      const initialize = async () => {
+        const user = JSON.parse(localStorage["user"])
+        const response = await axios.get(`https://localhost:7283/api/expense?userId=${user.id}`)
+      const data = response.data.data
       const rederData = groupBy(data, ({category}) => category)
       console.log(rederData)
       const result = Object.entries(rederData).map(( [category, entries], idx) => {

@@ -18,7 +18,7 @@ export default function MyApp(props) {
   const router = useRouter(); // 初始化 useRouter
   const theme = useTheme(css);
   // 定義不需要導航列的路徑
-  const noNavRoutes = ['/login', '/register', 'logout', '/forgot-password']; // 根據您的頁面路徑調整
+  const noNavRoutes = ['/login', '/register', 'logout', '/forgot-password', '/newlogin']; // 根據您的頁面路徑調整
   const showNav = !noNavRoutes.includes(router.pathname);
 
   const noAvatarRoutes = ['/login', '/register', 'logout', '/forgot-password']

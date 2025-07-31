@@ -36,14 +36,16 @@ import { renderDateViewCalendar } from "@mui/x-date-pickers/dateViewRenderers";
 
 
 function CategorySelectBoxEditCell(props) {
-  const {id, value, field, hasFocus, categories} = props
+  const {id, value, field, hasFocus, categories, setSubcategory} = props
   const apiRef = useGridApiContext()
   const ref = React.useRef(null)
 
   const handleChange = (event, newValue) => {
-    console.log("newValue:")
-    console.log(newValue)
+    
     apiRef.current.setEditCellValue({ id, field, value: newValue.props.value });
+    const category = newValue.props.value
+    const subCategories = categories.filter(c => c.id == category)[0].subCategories
+    setSubcategory(subCategories)
   };
 
   useEnhancedEffect(() => {
@@ -56,10 +58,8 @@ function CategorySelectBoxEditCell(props) {
   return(
     <Box>
     <Select value={value} ref={ref}  onChange={handleChange}>
-      {categories.map(c => <MenuItem value={c.name}>{c.name}</MenuItem>)}
-      <MenuItem value={"飲食"}>飲食</MenuItem>
-        <MenuItem value={"玩樂"}>玩樂</MenuItem>
-        <MenuItem value={"教育"}>教育</MenuItem>
+      {categories.map(c => <MenuItem value={c.id}>{c.name}</MenuItem>)}
+      
     </Select></Box>)
 }
 
@@ -93,14 +93,18 @@ function EditToolbar(props) {
 
 export default function FullFeaturedCrudGrid({rows, setRows, userId, categoriesData}) {
   
+  const sc = categoriesData.flatMap(c => c.subCategories)
+
   const [rowModesModel, setRowModesModel] = React.useState({});
+  const [subCategories, setSubCategories] = React.useState([])
   const renderCategorySelectBoxEditInputCell = (params) => {
     
-  return <CategorySelectBoxEditCell {...params} categories={categoriesData} />;
+  return <CategorySelectBoxEditCell {...params} categories={categoriesData} setSubcategory={setSubCategories}/>;
 };
 
+
 const renderSubCategorySelectBoxEditInputCell =  (params)=>  {
-  return <SubCategorySelectBoxEditCell  {...params} categories={categoriesData}/>;
+  return <SubCategorySelectBoxEditCell  {...params} categories={categoriesData}subCategories={subCategories} setSubCategories={setSubCategories}/>;
 };
   
   const handleRowEditStop = (params, event) => {
@@ -118,7 +122,7 @@ const renderSubCategorySelectBoxEditInputCell =  (params)=>  {
   };
 
   const handleDeleteClick = (id) => () => {
-    console.log(userId)
+    
     setRows(rows.filter((row) => row.id !== id));
 
     const deleteUrl = process.env.NEXT_PUBLIC_BASE_URL + `expense/${id}`
@@ -150,11 +154,20 @@ const renderSubCategorySelectBoxEditInputCell =  (params)=>  {
   const processRowUpdate = (newRow) => {
     const updatedRow = { ...newRow, isNew: false };
     setRows(rows.map((row) => (row.id === newRow.id ? updatedRow : row)));
+    console.log(updatedRow)
+    const newData = {
+      accountId: 1,
+      categoryId: updatedRow.category,
+      subCategoryId: updatedRow.subCategory,
+      dateTime: updatedRow.dateTime,
+      price: updatedRow.price,
+      name: updatedRow.name
+    }
     
     const editUrl = process.env.NEXT_PUBLIC_BASE_URL + `expense/${newRow.id}`
     const updateApi = async () => {
       try {
-        const response = await axios.put(editUrl, newRow)
+        const response = await axios.put(editUrl, newData)
       } catch(error) {
         console.error(error)
       }
@@ -171,8 +184,11 @@ const renderSubCategorySelectBoxEditInputCell =  (params)=>  {
     { field: 'dateTime', headerName: '日期', width: 180, editable: true, type: 'dateTime' },
     { field: 'name', headerName: '名稱', width: 180, editable: true },
     { field: 'price', headerName: '金額', width: 120, editable: true, type: 'number' },
-    { field: 'category', headerName: '類別', width: 180, editable: true, renderEditCell: renderCategorySelectBoxEditInputCell },
-    { field: 'reason', headerName: '消費目的', width: 220, editable: true, renderEditCell: renderSubCategorySelectBoxEditInputCell },
+    { field: 'category', headerName: '類別', width: 180, editable: true, valueGetter:  (value, row) => {
+      
+      return categoriesData.filter(x => x.id == value)[0]?.name
+    }, renderEditCell: renderCategorySelectBoxEditInputCell },
+    { field: 'subCategory', headerName: '消費目的', width: 220, editable: true,valueGetter: (value) => sc.filter(x => x.id == value)[0]?.name, renderEditCell: renderSubCategorySelectBoxEditInputCell },
     { field: 'account', headerName: '帳戶', width: 180, editable: true, renderEditCell: renderExpenseAccountSelectBoxEditInputCell },
     {
       field: 'actions',

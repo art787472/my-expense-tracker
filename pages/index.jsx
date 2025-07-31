@@ -14,10 +14,7 @@ import { TimePicker } from '@mui/x-date-pickers/TimePicker';
 import https from "https";
 import { Snackbar } from "@mui/material";
 import Alert from "@mui/material/Alert";
-import cookie from 'cookie';
-const agent = new https.Agent({
-  rejectUnauthorized: false, // 關閉憑證驗證（⚠️僅限開發環境）
-});
+
 
 export async function getStaticProps () {
   process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
@@ -38,9 +35,9 @@ export async function getStaticProps () {
 export default function Home({categoriesData}) {
   //const theme = useTheme();
   const [name, setName] = React.useState("")
-  const [category, setCategory] = React.useState("食")
-  const [reason, setReason] = React.useState("便當")
-  const [account, setAccount] = React.useState("")
+  const [category, setCategory] = React.useState(0)
+  const [subcategory, setSubcategory] = React.useState(0)
+  const [account, setAccount] = React.useState(0)
   const [time, setTime] = React.useState(dayjs())
   const [price, setPrice] = React.useState(0)
   const [categories, setCategories] = React.useState([]);
@@ -87,13 +84,12 @@ export default function Home({categoriesData}) {
   const handleSubmit = async (e) => {
     let data = {
       name,
-      category,
-      reason,
-      account,
+      categoryId: category,
+      subcategoryId: subcategory,
+      accountId: account,
       dateTime: time.format(),
       price
     }
-
 
 
     if (file) {
@@ -184,7 +180,7 @@ export default function Home({categoriesData}) {
         </Grid>
 
         <Grid size={12} item>
-          <CategoryTab data={categoriesData} category={category} setCategory={setCategory} reason={reason} setReason={setReason} />
+          <CategoryTab data={categoriesData} category={category} setCategory={setCategory} reason={subcategory} setReason={setSubcategory} />
         </Grid>
 
         <Grid size={12} item>

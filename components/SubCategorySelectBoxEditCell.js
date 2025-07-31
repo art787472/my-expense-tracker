@@ -7,17 +7,25 @@ import {useGridApiContext,
 } from "@mui/x-data-grid";
 
 export default function SubCategorySelectBoxEditCell(props) {
-  const {id, value, field, hasFocus, categories, row} = props
+  const {id, value, field, hasFocus, categories, row, subCategories, setSubCategories} = props
   
-  const [category] = categories.filter(c => c.name == row.category)
+  const [category] = categories.filter(c => c.id == row.categoryId)
   
-  const subcategories = category.subCategories
+  
+  React.useEffect(()=>{
+
+    setSubCategories(category.subCategories)
+  },[])
+  
   const apiRef = useGridApiContext()
   const ref = React.useRef(null)
 
+  
   const handleChange = (event, newValue) => {
-    
+   
     apiRef.current.setEditCellValue({ id, field, value: newValue.props.value });
+
+    
   };
 
   useEnhancedEffect(() => {
@@ -30,9 +38,10 @@ export default function SubCategorySelectBoxEditCell(props) {
   return(
     <Box>
     <Select value={value} ref={ref}  onChange={handleChange}>
-      {subcategories.map(s => <MenuItem value={s.name}>{s.name}</MenuItem>)}
+      {subCategories.map(s => <MenuItem value={s.id}>{s.name}</MenuItem>)}
         
       
     </Select></Box>)
 }
+
 

@@ -88,14 +88,15 @@ export default function LoginPage() {
     try {
       const res = await axios.post('https://localhost:7283/api/account/login', data, { withCredentials: true })
       
-      if (res.request?.status == 200) {
+      if (res.status === 200) {
         const token = res.data.data.accessToken
         
         
-        localStorage['token'] = token;
-        localStorage['user'] = JSON.stringify(res.data.data.user);
+        localStorage.setItem('token', token);
+        localStorage.setItem('user', JSON.stringify(res.data.data.user));
         
         Cookies.set('token', token)
+        Cookies.set('userId', res.data.data.user.id)
 
         setOpen(true);
         router.push('/');

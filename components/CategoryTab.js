@@ -49,8 +49,9 @@ export default function CategoryTab({data, setCategory, reason, setReason}) {
 
     const handleChange = (event, newValue) => {
         
+        
         setValue(newValue);
-        setCategory(event.target.name)
+        
     };
     
     const [alignment, setAlignment] = React.useState('left');
@@ -63,18 +64,13 @@ export default function CategoryTab({data, setCategory, reason, setReason}) {
     <>
         <Tabs value={value} onChange={handleChange} aria-label="disabled tabs example"  variant="scrollable" scrollButtons="auto" fullWidth >
             {data.map((v, idx) => {
-                return <Tab name={v.name} label={v.name} icon={iconConvert(v.icon.name)} />
+                return <Tab key={`${v.id}-${v.name}`} id={v.id} label={v.name} icon={iconConvert(v.icon.name)} onClick={(e) => {console.log(v.id);setCategory(v.id)}} />
             })}
-            {/* <Tab name="食" label="食" icon={<RestaurantIcon />} />
-            <Tab name="衣" label="衣" icon={<CheckroomIcon />} />
-            <Tab name="住" label="住" icon={<HouseIcon />} />
-            <Tab name="行" label="行" icon={<DirectionsCarIcon />} />
-            <Tab name="樂" label="樂" icon={<DirectionsCarIcon />} />
-            <Tab name="其他" label="其他" icon={<PaidIcon />} /> */}
+            
         </Tabs>
         {data.map((v, idk) => {
             return (
-                <TabPanel value={value} index={idk} >
+                <TabPanel key={`${v.id}-${v.name}`} value={value} index={idk} >
                     <ReasonPanel setReason={setReason} subCategories={v.subCategories}/>
                 </TabPanel>
             )

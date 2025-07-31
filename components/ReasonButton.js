@@ -1,8 +1,10 @@
 import IconButton from '@mui/material/IconButton';
 import { Children } from 'react';
-export default function ReasonButton({icon, text, value, index, onClick, setValue}){
+export default function ReasonButton({icon, text, value, index, onClick, setValue, setReason, subCategoryId}){
+    
     const handleClick = (e) => {
         setValue(index)
+        setReason(subCategoryId)
     }
     return (
         <>
