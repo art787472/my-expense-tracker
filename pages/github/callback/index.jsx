@@ -11,11 +11,11 @@ export default function HomePage() {
         const { code } = router.query;
         const handlelogin = async () => {
             try {
-                const res = await axios.get(`https://localhost:7283/auth/google/callback?code=${code}`);
+                const res = await axios.get(`https://localhost:7283/auth/github/callback?code=${code}`);
                 if (res.status === 200) {
                     console.log("登入成功:", res.data);
                     const data = res.data.data;
-
+                    
                     // 可以在這裡處理登入成功後的邏輯
                     const token = data.accessToken
 
@@ -45,7 +45,7 @@ export default function HomePage() {
     }, [router.query]);
 
     return (
-        <Box
+         <Box
             display="flex"
             justifyContent="center"
             alignItems="center"
@@ -55,6 +55,5 @@ export default function HomePage() {
             <CircularProgress />
             <p>正在處理登入...</p>
         </Box>
-
     )
 }

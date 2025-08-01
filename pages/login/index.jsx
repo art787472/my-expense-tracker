@@ -1,254 +1,267 @@
-import * as React from "react";
-import { useRouter } from 'next/router'
-import Avatar from "@mui/material/Avatar";
-import Button from "@mui/material/Button";
-import CssBaseline from "@mui/material/CssBaseline";
-import TextField from "@mui/material/TextField";
-import FormControlLabel from "@mui/material/FormControlLabel";
-import Checkbox from "@mui/material/Checkbox";
-import Link from "@mui/material/Link"; // MUI Link for styling, use Next.js Link for routing
-import Grid from "@mui/material/Grid";
-import Box from "@mui/material/Box";
-import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
-import Typography from "@mui/material/Typography";
-import Container from "@mui/material/Container";
-import Snackbar from "@mui/material/Snackbar";
-import Alert from "@mui/material/Alert";
-import { createTheme, ThemeProvider } from "@mui/material/styles";
-import NextLink from "next/link"; // Next.js Link for routing
-import axios from "axios";
-import UserContext from "../../store/user-context";
+import * as React from 'react';
+import {
+    Button,
+    FormControl,
+    Checkbox,
+    FormControlLabel,
+    InputLabel,
+    OutlinedInput,
+    TextField,
+    InputAdornment,
+    Link,
+    Alert,
+    IconButton,
+} from '@mui/material';
+import AccountCircle from '@mui/icons-material/AccountCircle';
+import Visibility from '@mui/icons-material/Visibility';
+import VisibilityOff from '@mui/icons-material/VisibilityOff';
+import { AppProvider } from '@toolpad/core/AppProvider';
+import { SignInPage } from '@toolpad/core/SignInPage';
+import { useTheme } from '@mui/material/styles';
+import axios from 'axios';
 import Cookies from 'js-cookie'
+import { useRouter } from 'next/router'
+const providers = [
+    { id: 'google', name: 'Google' }, 
+    { id: 'github', name: 'GitHub' },
+    {id: 'line', name: 'Line'}, 
+    { id: 'credentials', name: 'Email and Password' }
+];
 
-// 您可以定義一個自定義主題，如果沒有則使用預設主題
-const defaultTheme = createTheme();
-
-function CustomizedSnackbars({ open, setOpen }) {
-
-
-
-
-  const handleClose = (event, reason) => {
-    if (reason === 'clickaway') {
-      return;
-    }
-
-    setOpen(false);
-  };
-
-  return (
-    <div>
-
-      <Snackbar anchorOrigin={{ vertical: 'top', horizontal: 'center' }} open={open} autoHideDuration={6000} onClose={handleClose}>
-        <Alert
-          onClose={handleClose}
-          severity="success"
-          variant="filled"
-          sx={{ width: '100%' }}
-        >
-          登入成功!
-        </Alert>
-      </Snackbar>
-    </div>
-  );
+function CustomEmailField() {
+    return (
+        <TextField
+            id="input-with-icon-textfield"
+            label="Email"
+            name="email"
+            type="email"
+            size="small"
+            required
+            fullWidth
+            slotProps={{
+                input: {
+                    startAdornment: (
+                        <InputAdornment position="start">
+                            <AccountCircle fontSize="inherit" />
+                        </InputAdornment>
+                    ),
+                },
+            }}
+            variant="outlined"
+        />
+    );
 }
 
-export default function LoginPage() {
-  const [email, setEmail] = React.useState("");
-  const [password, setPassword] = React.useState("");
-  const [rememberMe, setRememberMe] = React.useState(false);
-  const [error, setError] = React.useState(""); // 用於顯示錯誤訊息
-  const [open, setOpen] = React.useState(false);
+function CustomPasswordField() {
+    const [showPassword, setShowPassword] = React.useState(false);
 
-  const router = useRouter()
+    const handleClickShowPassword = () => setShowPassword((show) => !show);
 
-  const userCtx = React.useContext(UserContext)
+    const handleMouseDownPassword = (event) => {
+        event.preventDefault();
+    };
 
-  React.useEffect(() => {
-    if (userCtx.login) {
-        console.log("用戶狀態已更新:");
-        console.log(userCtx.user);
-    }
-}, [userCtx.user, userCtx.login]);
-
-  const handleSubmit = async (event) => {
-    event.preventDefault(); // 防止表單預設提交行為 (頁面刷新)
-
-    // 這裡只是前端簡單的驗證，實際登入邏輯會與後端API互動
-    if (!email || !password) {
-      setError("請輸入電子郵件/使用者名稱和密碼。");
-      return;
-    }
-
-    const data = {
-      account: email,
-      password: password
-    }
-
-    try {
-      const res = await axios.post('https://localhost:7283/api/account/login', data, { withCredentials: true })
-      
-      if (res.status === 200) {
-        const token = res.data.data.accessToken
-        
-        
-        localStorage.setItem('token', token);
-        localStorage.setItem('user', JSON.stringify(res.data.data.user));
-        
-        Cookies.set('token', token)
-        Cookies.set('userId', res.data.data.user.id)
-
-        setOpen(true);
-        router.push('/');
-      }
-      
-
-    } catch (err) {
-
-      console.log(err)
-      setError(err.response?.data?.message)
-      
-
-      return;
-    }
-    // 假設登入成功，通常會重定向到儀表板或其他頁面
-    console.log({
-      email: email,
-      password: password,
-      rememberMe: rememberMe,
-    });
-    setError(""); // 清除錯誤訊息
-
-  };
-
-  return (
-    <ThemeProvider theme={defaultTheme}>
-      <Box
-        sx={{
-          backgroundImage: "url(/background_image.png)", // <-- 設定背景圖片路徑
-          backgroundRepeat: "no-repeat",
-          backgroundColor: (t) =>
-            t.palette.mode === "light"
-              ? t.palette.grey[50]
-              : t.palette.grey[900],
-          backgroundSize: "cover", // 圖片覆蓋整個容器
-          backgroundPosition: "center", // 圖片居中
-          display: "flex", // 啟用 Flexbox
-          flexDirection: "column", // 垂直排列
-          minHeight: "100vh", // 讓容器至少佔據整個視窗高度
-          alignItems: "center", // 水平居中對齊內容
-          justifyContent: "center", // 垂直居中對齊內容
-        }}
-      >
-        <Container component="main" maxWidth="xs">
-          <CssBaseline />
-          <Box
-            sx={{
-              p: 4, // 內部 padding
-              backgroundColor: "rgba(255, 255, 255, 0.85)", // 背景半透明白色
-              borderRadius: 2, // 圓角
-              boxShadow: 3, // 陰影
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
-            }}
-          >
-            <Avatar sx={{ m: 1, bgcolor: "first.main" }}>
-              <LockOutlinedIcon />
-            </Avatar>
-            <Typography component="h1" variant="h5">
-              登入您的帳戶
-            </Typography>
-            <Box
-              component="form"
-              onSubmit={handleSubmit}
-              noValidate
-              sx={{ mt: 1 }}
-            >
-              <TextField
-                margin="normal"
-                required
-                fullWidth
-                id="email"
-                label="電子郵件 / 使用者名稱"
-                name="email"
-                autoComplete="email"
-                autoFocus
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                error={!!error && !email} // 當有錯誤且電子郵件為空時顯示錯誤狀態
-                helperText={!!error && !email ? error : ""} // 顯示錯誤訊息
-              />
-              <TextField
-                margin="normal"
-                required
-                fullWidth
+    return (
+        <FormControl sx={{ my: 2 }} fullWidth variant="outlined">
+            <InputLabel size="small" htmlFor="outlined-adornment-password">
+                Password
+            </InputLabel>
+            <OutlinedInput
+                id="outlined-adornment-password"
+                type={showPassword ? 'text' : 'password'}
                 name="password"
-                label="密碼"
-                type="password"
-                id="password"
-                autoComplete="current-password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                error={!!error && !password} // 當有錯誤且密碼為空時顯示錯誤狀態
-                helperText={!!error && !password ? error : ""} // 顯示錯誤訊息
-              />
-              <FormControlLabel
-                control={
-                  <Checkbox
-                    value="remember"
-                    color="primary"
-                    checked={rememberMe}
-                    onChange={(e) => setRememberMe(e.target.checked)}
-                  />
+                size="small"
+                endAdornment={
+                    <InputAdornment position="end">
+                        <IconButton
+                            aria-label="toggle password visibility"
+                            onClick={handleClickShowPassword}
+                            onMouseDown={handleMouseDownPassword}
+                            edge="end"
+                            size="small"
+                        >
+                            {showPassword ? (
+                                <VisibilityOff fontSize="inherit" />
+                            ) : (
+                                <Visibility fontSize="inherit" />
+                            )}
+                        </IconButton>
+                    </InputAdornment>
                 }
-                label="記住我"
-              />
-              {error && ( // 顯示通用的錯誤訊息
-                <Typography
-                  color="error"
-                  variant="body2"
-                  sx={{ mt: 1, textAlign: "center" }}
-                >
-                  {error}
-                </Typography>
-              )}
-              <Button
-                type="submit"
-                fullWidth
-                variant="contained"
-                sx={{ mt: 3, mb: 2 }}
-              >
-                登入
-              </Button>
-              <Grid container>
-                <Grid
-                  item
-                  xs
-                  size={6}
-                  sx={{ display: "flex", justifyContent: "center" }}
-                >
-                  <NextLink href="/forgot-password" passHref legacyBehavior>
-                    <Link variant="body2">忘記密碼？</Link>
-                  </NextLink>
-                </Grid>
-                <Grid
-                  item
-                  size={6}
-                  sx={{ display: "flex", justifyContent: "center" }}
-                >
-                  <NextLink href="/register" passHref legacyBehavior>
-                    <Link variant="body2">{"還沒有帳戶？註冊"}</Link>
-                  </NextLink>
-                </Grid>
-              </Grid>
-            </Box>
-          </Box>
-        </Container>
-      </Box>
+                label="Password"
+            />
+        </FormControl>
+    );
+}
+
+function CustomButton() {
+    return (
+        <Button
+            type="submit"
+            variant="outlined"
+            color="info"
+            size="small"
+            disableElevation
+            fullWidth
+            sx={{ my: 2 }}
+        >
+            Log In
+        </Button>
+    );
+}
+
+function SignUpLink() {
+    return (
+        <Link href="/register" variant="body2">
+            Sign up
+        </Link>
+    );
+}
+
+function ForgotPasswordLink() {
+    return (
+        <Link href="/" variant="body2">
+            Forgot password?
+        </Link>
+    );
+}
+
+function Title() {
+    return <h2 style={{ marginBottom: 8 }}>Login</h2>;
+}
+
+function Subtitle({ isShowSubtitle }) {
+    return (
+        isShowSubtitle && (
+            <Alert sx={{ mb: 2, px: 1, py: 0.25, width: '100%' }} severity="warning">
+                {/* Add your subtitle message here */}
+            </Alert>
+        )
+    );
+}
+
+function RememberMeCheckbox() {
+    const theme = useTheme();
+    return (
+        <FormControlLabel
+            label="Remember me"
+            control={
+                <Checkbox
+                    name="remember"
+                    value="true"
+                    color="primary"
+                    sx={{ padding: 0.5, '& .MuiSvgIcon-root': { fontSize: 20 } }}
+                />
+            }
+            slotProps={{
+                typography: {
+                    color: 'textSecondary',
+                    fontSize: theme.typography.pxToRem(14),
+                },
+            }}
+        />
+    );
+}
+
+function GitHubLogin() {
+
+    const GITHUB_CONFIG = {
+        clientID: process.env.NEXT_PUBLIC_GITHUB_CLIENT_ID,
+
+        redirectURI: process.env.NEXT_PUBLIC_GITHUB_REDIRECT_URI,
+    };
+    const githubAuthUrl = `https://github.com/login/oauth/authorize?client_id=${GITHUB_CONFIG.clientID}&redirect_uri=${GITHUB_CONFIG.redirectURI}&scope=user:email`
+    window.location.href = githubAuthUrl;
+
+    return Promise.resolve();
+}
 
 
-      <CustomizedSnackbars open={open} setOpen={setOpen} />
-    </ThemeProvider>
-  );
+
+function GoogleLogin() {
+    console.log('Google login initiated');
+
+    const googleAuthUrl = 'https://accounts.google.com/o/oauth2/v2/auth?client_id=475148083359-ui2hf007eh8jee2qalr0ojckg2vh9fje.apps.googleusercontent.com&redirect_uri=https://localhost:3000/google/callback&response_type=code&scope=email%20profile&access_type=offline';
+
+    // 直接重定向到 Google 授權頁面
+    window.location.href = googleAuthUrl;
+
+    return Promise.resolve();
+}
+
+
+export default function SlotsSignIn() {
+    const [isShowSubtitle, setIsShowSubtitle] = React.useState(false);
+    const theme = useTheme();
+    const router = useRouter();
+
+    function handlelogin(provider, formData) {
+        console.log('Logging in with provider:', provider);
+        switch (provider.id) {
+            case 'google':
+                GoogleLogin();
+                break;
+            case 'github':
+                GitHubLogin();
+                break;
+            case 'credentials':
+                loginWithCredentials(formData.get('email'), formData.get('password'), formData.get('remember') === 'true')
+
+                break;
+            default:
+                console.error('Unknown provider:', provider.id);
+        }
+    }
+
+    async function loginWithCredentials(email, password, rememberMe) {
+        const data = {
+            account: email,
+            password: password
+        }
+
+        try {
+            const res = await axios.post('https://localhost:7283/api/account/login', data, { withCredentials: true })
+
+            if (res.status === 200) {
+                const token = res.data.data.accessToken
+
+
+                localStorage.setItem('token', token);
+                localStorage.setItem('user', JSON.stringify(res.data.data.user));
+
+                Cookies.set('token', token)
+                Cookies.set('userId', res.data.data.user.id)
+
+
+                router.push('/');
+            }
+
+
+        } catch (err) {
+            console.log(err)
+        }
+    }
+
+    return (
+        <AppProvider theme={theme}>
+            <SignInPage
+                signIn={handlelogin}
+                slots={{
+
+                    subtitle: Subtitle,
+
+                    passwordField: CustomPasswordField,
+
+                    signUpLink: SignUpLink,
+                    rememberMe: RememberMeCheckbox,
+                    forgotPasswordLink: ForgotPasswordLink,
+                }}
+                slotProps={{ form: { noValidate: true }, subtitle: { isShowSubtitle } }}
+                providers={providers}
+                localeText={{
+                    providerSignInTitle: (provider) => `${provider} 登入`,
+                }}
+            />
+        </AppProvider>
+    );
 }
