@@ -204,8 +204,8 @@ export default function SlotsSignIn() {
     const theme = useTheme();
     const router = useRouter();
 
-    function handlelogin(provider, formData, event) {
-        event.preventDefault();
+    function handlelogin(provider, formData) {
+        
         console.log('Logging in with provider:', provider);
         switch (provider.id) {
             case 'google':
