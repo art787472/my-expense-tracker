@@ -1,6 +1,8 @@
 import axios from "axios";
 import https from 'https';
 import Cookies from 'js-cookie'
+
+const baseUrl = process.env.NEXT_PUBLIC_BASE_URL
 const instance = axios.create({
   
   httpsAgent: new https.Agent({  
@@ -35,7 +37,7 @@ instance.interceptors.response.use(
                 
                 const accessToken = Cookies.get('token');
                 
-                const res = await instance.post('https://localhost:7283/api/account/token', {
+                const res = await instance.post(`${baseUrl}/account/token`, {
                     accessToken
                    
                 });

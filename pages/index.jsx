@@ -12,27 +12,30 @@ import dayjs from 'dayjs';
 import axios from "../utils/axios";
 import { TimePicker } from '@mui/x-date-pickers/TimePicker';
 import https from "https";
-import { Snackbar } from "@mui/material";
+import { Paper, Snackbar } from "@mui/material";
 import Alert from "@mui/material/Alert";
 
+const baseUrl = process.env.NEXT_PUBLIC_BASE_URL
 
-export async function getStaticProps () {
-  process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
-  const res = await fetch ('https://localhost:7283/api/category')
+export async function getServerSideProps  (request, response) {
+  
+  const res = await fetch (`${baseUrl}/category`)
     if (!res.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
     }
   const data = await res.json()
   
+  
 
   return {
     props: {
-      categoriesData: data.data
+      categoriesData: data.data,
+      monthExpense: 0
     }
   }
 }
 
-export default function Home({categoriesData}) {
+export default function Home({categoriesData, monthExpense}) {
   //const theme = useTheme();
   const [name, setName] = React.useState("")
   const [category, setCategory] = React.useState(0)
@@ -47,6 +50,8 @@ export default function Home({categoriesData}) {
   const [previewUrl, setPreviewUrl] = React.useState(null);
   const [open, setOpen] = React.useState(false)
   const [alertMessage, setAlertMessage] = React.useState("")
+ 
+  const [monthIncome, setMonthIncome] = React.useState(0)
   const fileInputRef = React.useRef(null);
   const handleClose = (event, reason) => {
     if (reason === 'clickaway') {
@@ -56,25 +61,7 @@ export default function Home({categoriesData}) {
     setOpen(false);
   };
   
-  // React.useEffect(() => {
-  //   const fetchCategories = async () => {
-  //     try {
-  //       const response = await fetch('https://localhost:7283/api/category');
-  //       if (!response.ok) {
-  //         throw new Error('Failed to fetch categories');
-  //       }
-  //       const data = await response.json();
 
-  //       setCategories(data.data);
-  //     } catch (err) {
-  //       setError(err.message);
-  //     } finally {
-  //       setLoading(false);
-  //     }
-  //   };
-
-  //   fetchCategories();
-  // }, []);
   const handleUpload = async (e) => {
     if (fileInputRef.current) {
       fileInputRef.current.click();
@@ -109,7 +96,7 @@ export default function Home({categoriesData}) {
     }
 
     try {
-      const response = await axios.post(`https://localhost:7283/api/expense`, data)
+      const response = await axios.post(`${baseUrl}/expense`, data)
 
         if(response.status === 200) {
           setAlertMessage("上傳成功")
@@ -145,7 +132,7 @@ export default function Home({categoriesData}) {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-
+      <Box sx={{ display: 'flex',  alignItems: 'center', padding: 2 }}>
       <Grid
         container
         spacing={1}
@@ -262,6 +249,27 @@ export default function Home({categoriesData}) {
           />
         </Grid>
       </Grid>
+      <Grid container spacing={2} sx={{ marginTop: 2, width: "100%" }}>
+        <Grid size={12} container>
+          <Grid item size={6}>
+            <Paper elevation={3} sx={{ height: '100%', justifyContent: 'center', display: 'flex', alignItems: 'center' }}>
+              本月支出: {monthExpense} 元
+            </Paper>
+          </Grid>
+          <Grid item size={6}>
+            <Paper elevation={3} sx={{ height: '100%', justifyContent: 'center', display: 'flex', alignItems: 'center' }}>
+              本月收入
+            </Paper>
+          </Grid>
+        </Grid>
+        <Grid>
+            <Paper elevation={3} sx={{ height: '100%', justifyContent: 'center', display: 'flex', alignItems: 'center' }}>
+              今日支出
+              
+              </Paper>
+        </Grid>
+      </Grid>
+      </Box>
       <Snackbar anchorOrigin={{ vertical: 'top', horizontal: 'center' }} open={open} autoHideDuration={6000} onClose={handleClose}>
         <Alert
           onClose={handleClose}

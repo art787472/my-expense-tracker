@@ -27,7 +27,7 @@ const providers = [
     {id: 'line', name: 'Line'}, 
     { id: 'credentials', name: 'Email and Password' }
 ];
-
+const baseUrl = process.env.NEXT_PUBLIC_BASE_URL
 function CustomEmailField() {
     return (
         <TextField
@@ -177,9 +177,18 @@ function GitHubLogin() {
 }
 
 
+function LineLogin() {
+    const LINE_CONFIG = {
+        clientID: process.env.NEXT_PUBLIC_LINE_CLIENT_ID,
+        redirectURI: process.env.NEXT_PUBLIC_LINE_REDIRECT_URI,
+    };
+    const lineAuthUrl = `https://access.line.me/oauth2/v2.1/authorize?response_type=code&client_id=${LINE_CONFIG.clientID}&redirect_uri=${LINE_CONFIG.redirectURI}&scope=openid%20profile%20email&state=12345abcde`
+    window.location.href = lineAuthUrl;
 
+    return Promise.resolve();
+}
 function GoogleLogin() {
-    console.log('Google login initiated');
+    
 
     const googleAuthUrl = 'https://accounts.google.com/o/oauth2/v2/auth?client_id=475148083359-ui2hf007eh8jee2qalr0ojckg2vh9fje.apps.googleusercontent.com&redirect_uri=https://localhost:3000/google/callback&response_type=code&scope=email%20profile&access_type=offline';
 
@@ -204,6 +213,9 @@ export default function SlotsSignIn() {
             case 'github':
                 GitHubLogin();
                 break;
+            case 'line':
+                LineLogin();
+                break;
             case 'credentials':
                 loginWithCredentials(formData.get('email'), formData.get('password'), formData.get('remember') === 'true')
 
@@ -220,7 +232,7 @@ export default function SlotsSignIn() {
         }
 
         try {
-            const res = await axios.post('https://localhost:7283/api/account/login', data, { withCredentials: true })
+            const res = await axios.post(`${baseUrl}/account/login`, data, { withCredentials: true })
 
             if (res.status === 200) {
                 const token = res.data.data.accessToken

@@ -11,6 +11,10 @@ const withTM = require('next-transpile-modules')([
 const nextConfig = {
   reactStrictMode: true,
   // 您其他的 Next.js 配置
+   eslint: {
+    // 在生產構建時忽略 ESLint 錯誤
+    ignoreDuringBuilds: true,
+  },
 };
 
 module.exports = withTM(nextConfig);

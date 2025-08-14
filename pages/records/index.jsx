@@ -4,9 +4,10 @@ import { Box } from "@mui/material";
 import axios from "../../utils/axios"
 import UserContext from "../../store/user-context"
 
+const baseUrl = process.env.NEXT_PUBLIC_BASE_URL
 export async function getStaticProps () {
-  process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
-  const res = await fetch ('https://localhost:7283/api/category')
+  
+  const res = await fetch (`${baseUrl}/category`)
     if (!res.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
     }
@@ -37,7 +38,7 @@ export default function Home({ categoriesData }) {
       userJson = JSON.parse(storedUser)
       setUser(userJson);
     }
-      const response = await axios.get(`https://localhost:7283/api/expense?userId=${userJson?.id}`)
+      const response = await axios.get(`${baseUrl}/expense?userId=${userJson?.id}`)
       const data = response.data.data
       
       const rederData = data.map(datum => {

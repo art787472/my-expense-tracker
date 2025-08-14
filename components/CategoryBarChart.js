@@ -17,17 +17,25 @@ const data = [
             { food: 100, clothes: 200, living: 200, traffic: 0, week: "第三周"},
             { food: 100, clothes: 200, living: 200, traffic: 0, week: "第四周"},
           ]
-export default function CategoryBarChart() {
+export default function CategoryBarChart({rawData}) {
+  console.log(rawData)
+  const chartData = rawData.map(datum => {
+  return{
+  ...datum.categoryAmounts,
+  week: `第${datum.week}週`
+  }
+});
+ const seriesData = Object.keys(rawData[0].categoryAmounts).map(d => {
+  return {
+    dataKey: d,
+    label: d
+  }
+})
   return (
     <BarChart
-      dataset={data}
+      dataset={chartData}
       xAxis={[{ dataKey: 'week' }]}
-      series={[
-        { dataKey: 'food', label: '食' },
-        { dataKey: 'clothes', label: '衣' },
-        { dataKey: 'living', label: '住' },
-        { dataKey: 'traffic', label: '行' },
-      ]}
+      series={seriesData}
       {...chartSetting}
     />
   );
