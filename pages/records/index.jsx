@@ -5,7 +5,7 @@ import axios from "../../utils/axios"
 import UserContext from "../../store/user-context"
 
 const baseUrl = process.env.NEXT_PUBLIC_BASE_URL
-export async function getStaticProps () {
+export async function getServerSideProps () {
   
   const res = await fetch (`${baseUrl}/category`)
     if (!res.ok) {
