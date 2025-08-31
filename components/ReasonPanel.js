@@ -11,7 +11,7 @@ const Cell = ({ children }) => {
 
 
 export default function ReasonPanel({setReason, subCategories}) {
-    const [value, setValue] = useState(0)
+    const [value, setValue] = useState(1)
     
 
     
