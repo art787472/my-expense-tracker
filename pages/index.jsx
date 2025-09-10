@@ -83,7 +83,7 @@ export default function Home({categoriesData, monthExpense}) {
       const formData = new FormData();
       formData.append('files', file);
       try {
-        const imgUploadResponse = await axios.post(process.env.NEXT_PUBLIC_BASE_URL + 'image', formData)
+        const imgUploadResponse = await axios.post(process.env.NEXT_PUBLIC_BASE_URL + '/image', formData)
         if (imgUploadResponse.request?.status === 200) {
           const picPath = imgUploadResponse.data.path
           data = { ...data, picPath }
