@@ -188,9 +188,12 @@ function LineLogin() {
     return Promise.resolve();
 }
 function GoogleLogin() {
-    
+    const GOOGLE_CONFIG = {
+        clientID: process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID,
+        redirectURI: NEXT_PUBLIC_GOOGLE_REDIRECT_URI,
+    };
 
-    const googleAuthUrl = 'https://accounts.google.com/o/oauth2/v2/auth?client_id=475148083359-ui2hf007eh8jee2qalr0ojckg2vh9fje.apps.googleusercontent.com&redirect_uri=https://localhost:3000/google/callback&response_type=code&scope=email%20profile&access_type=offline';
+    const googleAuthUrl = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${GOOGLE_CONFIG.clientID}&redirect_uri=${GOOGLE_CONFIG.redirectURI}&response_type=code&scope=email%20profile&access_type=offline`
 
     // 直接重定向到 Google 授權頁面
     window.location.href = googleAuthUrl;
