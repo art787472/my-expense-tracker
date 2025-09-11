@@ -6,12 +6,12 @@ import CircularProgress from '@mui/material/CircularProgress';
 import { Box } from "@mui/material";
 export default function HomePage() {
     const router = useRouter();
-    const { NEXT_PUBLIC_BACKEND_REDIRECT_URI } = process.env;
+    const redirect_uri = process.env.NEXT_PUBLIC_BACKEND_REDIRECT_URI;
     useEffect(() => {
         const { code } = router.query;
         const handlelogin = async () => {
             try {
-                const res = await axios.get(`https://${NEXT_PUBLIC_BACKEND_REDIRECT_URI}/auth/line/callback?code=${code}`);
+                const res = await axios.get(`https://${redirect_uri}/auth/line/callback?code=${code}`);
                 if (res.status === 200) {
                     console.log("登入成功:", res.data);
                     const data = res.data.data;

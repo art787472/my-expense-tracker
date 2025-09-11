@@ -190,7 +190,7 @@ function LineLogin() {
 function GoogleLogin() {
     const GOOGLE_CONFIG = {
         clientID: process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID,
-        redirectURI: NEXT_PUBLIC_GOOGLE_REDIRECT_URI,
+        redirectURI: process.env.NEXT_PUBLIC_GOOGLE_REDIRECT_URI,
     };
 
     const googleAuthUrl = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${GOOGLE_CONFIG.clientID}&redirect_uri=${GOOGLE_CONFIG.redirectURI}&response_type=code&scope=email%20profile&access_type=offline`
