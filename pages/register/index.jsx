@@ -63,7 +63,7 @@ export default function RegisterPage() {
   const router = useRouter()
 
   const userCtx = React.useContext(UserContext)
-
+const backend_uri = process.env.NEXT_PUBLIC_BACKEND_REDIRECT_URI
 
   const handleSubmit = async (event) => {
     event.preventDefault(); // 防止表單預設提交行為 (頁面刷新)
@@ -80,7 +80,7 @@ export default function RegisterPage() {
     }
 
     try {
-      const res = await axios.post('https://localhost:7283/api/account/register', data)
+      const res = await axios.post(`${backend_uri}/api/account/register`, data)
       
       console.log(res)
       

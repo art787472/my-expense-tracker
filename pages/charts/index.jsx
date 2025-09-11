@@ -16,6 +16,7 @@ function getWeekOfMonth(dateStr) {
 }
 
 function groupByWeekAndCategory(records) {
+  const backend_uri = process.env.NEXT_PUBLIC_BACKEND_REDIRECT_URI
   const weekMap = new Map();
 
   records.forEach(({ category, amount, date }) => {
@@ -67,11 +68,11 @@ export default function Home() {
   useEffect(() => {
     const initialize = async () => {
       const user = JSON.parse(localStorage["user"])
-      const response = await axios.get(`https://localhost:7283/api/expense?userId=${user.id}`)
+      const response = await axios.get(`${backend_uri}/api/expense?userId=${user.id}`)
       const data = response.data.data
       const rederData = groupBy(data, ({ category }) => category)
 
-      const responseData = await axios.get(`https://localhost:7283/api/chart/barchart?userId=${user.id}`)
+      const responseData = await axios.get(`${backend_uri}/api/chart/barchart?userId=${user.id}`)
       setBarData(responseData.data)
       console.log(responseData.data)
       const result = Object.entries(rederData).map(([category, entries], idx) => {

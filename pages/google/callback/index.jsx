@@ -6,12 +6,12 @@ import CircularProgress from '@mui/material/CircularProgress';
 import { Box } from "@mui/material";
 export default function HomePage() {
     const router = useRouter();
-
+    const redirect_uri = process.env.NEXT_PUBLIC_BACKEND_REDIRECT_URI
     useEffect(() => {
         const { code } = router.query;
         const handlelogin = async () => {
             try {
-                const res = await axios.get(`https://localhost:7283/auth/google/callback?code=${code}`);
+                const res = await axios.get(`https://${redirect_uri}/auth/google/callback?code=${code}`);
                 if (res.status === 200) {
                     console.log("登入成功:", res.data);
                     const data = res.data.data;
