@@ -11,7 +11,7 @@ export default function HomePage() {
         const { code } = router.query;
         const handlelogin = async () => {
             try {
-                const res = await axios.get(`https://${redirect_uri}/auth/google/callback?code=${code}`);
+                const res = await axios.get(`${redirect_uri}/auth/google/callback?code=${code}`);
                 if (res.status === 200) {
                     console.log("登入成功:", res.data);
                     const data = res.data.data;
