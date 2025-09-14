@@ -45,7 +45,7 @@ TabPanel.propTypes = {
 
 
 export default function CategoryTab({data, setCategory, reason, setReason}) {
-    const [value, setValue] = React.useState(data[0].id);
+    const [value, setValue] = React.useState(3);
 
     const handleChange = (event, newValue) => {
         

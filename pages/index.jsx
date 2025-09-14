@@ -38,8 +38,8 @@ export async function getServerSideProps  (request, response) {
 export default function Home({categoriesData, monthExpense}) {
   //const theme = useTheme();
   const [name, setName] = React.useState("")
-  const [category, setCategory] = React.useState(0)
-  const [subcategory, setSubcategory] = React.useState(0)
+  const [category, setCategory] = React.useState(3)
+  const [subcategory, setSubcategory] = React.useState(1)
   const [account, setAccount] = React.useState(0)
   const [time, setTime] = React.useState(dayjs())
   const [price, setPrice] = React.useState(0)
