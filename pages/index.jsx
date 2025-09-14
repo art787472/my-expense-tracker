@@ -85,7 +85,7 @@ export default function Home({categoriesData, monthExpense}) {
       try {
         const imgUploadResponse = await axios.post(process.env.NEXT_PUBLIC_BASE_URL + '/image', formData)
         if (imgUploadResponse.request?.status === 200) {
-          const imageId = imgUploadResponse.data.path
+          const imageId = imgUploadResponse.data.imageId
           data = { ...data, imageId }
         }
 
