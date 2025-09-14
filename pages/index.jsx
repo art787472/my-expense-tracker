@@ -40,7 +40,7 @@ export default function Home({categoriesData, monthExpense}) {
   const [name, setName] = React.useState("")
   const [category, setCategory] = React.useState(3)
   const [subcategory, setSubcategory] = React.useState(1)
-  const [account, setAccount] = React.useState(0)
+  const [account, setAccount] = React.useState(2)
   const [time, setTime] = React.useState(dayjs())
   const [price, setPrice] = React.useState(0)
   const [categories, setCategories] = React.useState([]);
@@ -85,8 +85,8 @@ export default function Home({categoriesData, monthExpense}) {
       try {
         const imgUploadResponse = await axios.post(process.env.NEXT_PUBLIC_BASE_URL + '/image', formData)
         if (imgUploadResponse.request?.status === 200) {
-          const picPath = imgUploadResponse.data.path
-          data = { ...data, picPath }
+          const imageId = imgUploadResponse.data.path
+          data = { ...data, imageId }
         }
 
         
