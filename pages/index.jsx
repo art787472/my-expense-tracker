@@ -92,19 +92,23 @@ export default function Home({categoriesData, monthExpense}) {
         
       } catch (error) {
         console.error(error)
+        setAlertMessage("圖片上傳失敗")
+          setOpen(true)
       }
     }
 
     try {
       const response = await axios.post(`${baseUrl}/expense`, data)
         console.log(response)
-        if(response.status === 200) {
+        if(response.status === 201) {
           setAlertMessage("上傳成功")
           setOpen(true)
         }
 
     } catch (err) {
       console.log(err)
+      setAlertMessage("上傳失敗")
+          setOpen(true)
     }
 
   }
