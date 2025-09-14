@@ -97,7 +97,7 @@ export default function Home({categoriesData, monthExpense}) {
 
     try {
       const response = await axios.post(`${baseUrl}/expense`, data)
-
+        console.log(response)
         if(response.status === 200) {
           setAlertMessage("上傳成功")
           setOpen(true)
